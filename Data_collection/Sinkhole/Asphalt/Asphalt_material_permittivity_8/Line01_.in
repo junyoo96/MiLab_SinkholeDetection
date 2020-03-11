@@ -1,0 +1,18 @@
+#title: B-scan of a cavity within a dielectric half-space
+#domain: 0.4 0.6 0.5
+#dx_dy_dz: 0.002 0.002 0.002
+#time_window: 15e-9
+
+#material: 10 0.01 1 0 soil
+#material: 8 0.02 1 0 asphalt
+
+#box: 0 0 0.4 0.4 0.6 0.44 asphalt n
+#box: 0 0 0 0.4 0.6 0.4 soil n
+#sphere: 0.2 0.3 0.2 0.05 free_space y
+
+#python:
+from user_libs.antennas.MALA import antenna_like_MALA_1200
+antenna_like_MALA_1200(0.2, 0.15 + current_model_run * 0.01, 0.44, resolution=0.002, rotate90=True)
+#end_python:
+
+#geometry_view: 0 0 0 0.4 0.6 0.5 0.002 0.002 0.002 Line01_ n

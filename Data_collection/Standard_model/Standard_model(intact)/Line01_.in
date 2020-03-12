@@ -4,10 +4,8 @@
 #time_window: 15e-9
 
 #material: 10 0.01 1 0 soil
-#material: 6 0.01 1 0 concrete
 
 #box: 0 0 0 0.4 0.6 0.4 soil n
-#cylinder: 0.2 0 0.2 0.2 0.6 0.2 0.03 concrete n
 
 #python:
 from user_libs.antennas.MALA import antenna_like_MALA_1200

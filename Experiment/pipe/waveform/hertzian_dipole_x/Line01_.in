@@ -6,12 +6,14 @@
 #material: 10 0.01 1 0 soil
 #material: 6 0.01 1 0 concrete
 
+
+#waveform: ricker 1 1.2e9 my_pulse
+#hertzian_dipole: x 0.2 0.1 0.4 my_pulse
+#rx: 0.2 0.15 0.4
+#src_steps: 0 0.01 0
+#rx_steps: 0 0.01 0
+
 #box: 0 0 0 0.4 0.6 0.4 soil n
 #cylinder: 0.2 0.2 0.2 0.2 0.4 0.2 0.03 concrete n
-
-#python:
-from user_libs.antennas.MALA import antenna_like_MALA_1200
-antenna_like_MALA_1200(0.2, 0.15 + current_model_run * 0.01, 0.4, resolution=0.002, rotate90=True)
-#end_python:
 
 #geometry_view: 0 0 0 0.4 0.6 0.5 0.002 0.002 0.002 Line01_ n

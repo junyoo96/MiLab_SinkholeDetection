@@ -1,0 +1,35 @@
+#title: B-scan of a cavity within a dielectric half-space
+#domain: 0.4 0.6 0.5
+#dx_dy_dz: 0.002 0.002 0.002
+#time_window: 15e-9
+
+#material: 10 0.01 1 0 soil
+
+#box: 0 0 0 0.4 0.6 0.4 soil n
+#sphere: 0.2 0.3 0.2 0.05 free_space y
+
+#python:
+
+##Scans information
+##Total Ascans : 21* 31 = 651
+##Job options : -n 651
+##Time taken : 
+
+bscans=21
+ascans_per_bscan = 31
+ascan_spacing = 0.010
+bscan_spacing = 0.010
+
+yoffset=0.15
+xoffset=0.10
+
+bscan_num = np.floor((current_model_run - 1) / ascans_per_bscan)
+ascan_num = current_model_run - (bscan_num * ascans_per_bscan) - 1
+y = yoffset+(ascan_num * ascan_spacing)
+x = xoffset+(bscan_num * bscan_spacing)
+
+from user_libs.antennas.MALA import antenna_like_MALA_1200
+antenna_like_MALA_1200(x, y, 0.4, resolution=0.002, rotate90=True)
+#end_python:
+
+#geometry_view: 0 0 0 0.4 0.6 0.5 0.002 0.002 0.002 Line01_ n

@@ -5,7 +5,7 @@
 
 #material: 10 0.0 1 0 soil
 
-#waveform: ricker 1 0.3e9 my_pulse
+#waveform: ricker 1 0.8e9 my_pulse
 #hertzian_dipole: x 1.05 0 0.05 my_pulse
 #rx: 1.05 0.01 0.05
 #src_steps: 0 0.01 0

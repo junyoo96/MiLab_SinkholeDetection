@@ -68,7 +68,7 @@ ANTENNA_Y_OFFSET=0.01
 
 HERTZIAN_DIPOLE_SOURCE_POLARISATION="x"
 HERTZIAN_DIPOLE_SOURCE_X=DOMAIN_X_UNDERGROUND_START+ANTENNA_HEIGHT_OFFSET
-HERTZIAN_DIPOLE_SOURCE_Y=0+ANTENNA_HEIGHT_OFFSET
+HERTZIAN_DIPOLE_SOURCE_Y=0+ANTENNA_Y_OFFSET
 HERTZIAN_DIPOLE_SOURCE_Z=0.05
 HERTZIAN_DIPOLE_SOURCE_IDENTIFIER="my_pulse"
 #예외처리
@@ -155,7 +155,7 @@ GEOMETRY_VIEW_DY=DX_DY_DZ_Y
 GEOMETRY_VIEW_DZ=DX_DY_DZ_Z
 
 #input file과 동일한 경로에 저장될 geometry view의 file이름 설정
-GEOMETRY_VIEW_FILENAME="Line01_n"
+GEOMETRY_VIEW_FILENAME="Line01_"
 #================================================================
 #================================================================
 ##Generation Code
@@ -285,7 +285,7 @@ def generate_geometry_view():
 
     geometry_view_filename=GEOMETRY_VIEW_FILENAME
 
-    geometry_view=f"#geometry_view: {geometry_view_lower_left_x} {geometry_view_lower_left_y} {geometry_view_lower_left_Z} {geometry_view_higher_right_x} {geometry_view_higher_right_y} {geometry_view_higher_right_z} {geometry_view_dx} {geometry_view_dy} {geometry_view_dz} {geometry_view_filename}"
+    geometry_view=f"#geometry_view: {geometry_view_lower_left_x} {geometry_view_lower_left_y} {geometry_view_lower_left_Z} {geometry_view_higher_right_x} {geometry_view_higher_right_y} {geometry_view_higher_right_z} {geometry_view_dx} {geometry_view_dy} {geometry_view_dz} {geometry_view_filename} n"
     text.write(geometry_view)
 
 #================================================================
@@ -294,16 +294,38 @@ def generate_geometry_view():
 def random_sampling(min,max):
 
     value=0
+    digits=0
+    
+    min_digits=count_digits(min)
+    max_digits=count_digits(max)
 
-    if type(min)==int and type(max)==int:
-        value = randint(min, max)
-    elif type(min)==float and type(max)==float:
-        value = round(uniform(min, max),1)
+    if min_digits<max_digits:
+        digits=max_digits
+    else:
+        digits=min_digits 
+
+    value=round(uniform(min,max),digits)
 
     return value
 
+def count_digits(num):
+
+    flag=False
+
+    string=str(num)
+    count=0
+    for char in string:
+        if flag==True:
+            count+=1
+        if char==".":
+            flag=True
+
+    return count
+
 #================================================================
 def check_parameter_range():
+    print("Check Parameters...")
+
     wrong_parameter_list=""
 
     try:
@@ -393,13 +415,13 @@ def check_parameter_range():
 
 #================================================================
 def auto_generation(iteration_number):
-    print("시작")
+    print("Starting Input_File_Generation...")
     check_parameter_range()
-    print("잉")
+    
     for i in range(1, iteration_number+1):
 
         #generate file
-        filepath="C:/Users/Yoo YoungJun/Desktop/MiLab/Lab_Project/Sinkhole_detection/input_file_generation_test_files/sinkhole_%d.in" % i
+        filepath="./input_file_generation_test_files/sinkhole_%d_.in" % i
         global text
         text=open(filepath,'w')
 
@@ -427,6 +449,8 @@ def auto_generation(iteration_number):
         generate_geometry_view()
 
         text.close()
+
+        print("Generation Done")
 
 if __name__ == '__main__':
     auto_generation(5)

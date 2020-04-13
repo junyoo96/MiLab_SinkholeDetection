@@ -6,8 +6,9 @@
 clear all, clc
 
 %Set merged_out filename to turn into B-scan image
-%filename='C:\Users\Yoo YoungJun\Desktop\MiLab\Lab_Project\Sinkhole_detection\Sinkhole_Files\MiLab_SinkholeDetection\Data_collection\Standard_model\Standard_model(sinkhole)\time_window(15e-9)\Line01__merged.out'
-filename='C:\Users\Yoo YoungJun\Desktop\MiLab\Lab_Project\Sinkhole_detection\Sinkhole_Files\MiLab_SinkholeDetection\Automation_Files\input_file_generation_test_files\sinkhole_1__merged.out'
+%filename='C:\Users\Yoo YoungJun\Desktop\MiLab\Lab_Project\Sinkhole_detection\Sinkhole_Files\MiLab_SinkholeDetection\Automation_Files\input_file_generation_test_files\sinkhole_1__merged.out'
+filename='/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Automation_Files/input_file_generation_test_files/sinkhole_1__merged.out'
+
 
 % Open file and read fields
 if filename ~= 0
@@ -50,9 +51,10 @@ if filename ~= 0
         % 1 inch = 150pixel
         %Paper Position is inch
     % 300x150 pixel   
-    set(fh1,'PaperPosition', [0 0 2 1])   
+    set(fh1,'PaperPosition', [0 0 8 4])   
    
     %save figure as image
-    saveas(fh1,'C:\Users\Yoo YoungJun\Desktop\MiLab\Lab_Project\Sinkhole_detection\gprMax-master\gprMax-master\tools\MATLAB_scripts\test_image\a.png');
+    saveas(fh1,'/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Automation_Files/test_image/sinkhole.png');
+    
  
 end

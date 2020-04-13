@@ -453,4 +453,4 @@ def auto_generation(iteration_number):
         print("Generation Done")
 
 if __name__ == '__main__':
-    auto_generation(5)
+    auto_generation(1)

@@ -19,7 +19,7 @@ if filename ~= 0
     %field = input(prompt,'s');
     
     %Set field to show (There was option 'Ex', 'Ey', 'Ez')
-    field = 'Ez'
+    field = 'Ex'
     fieldpath = strcat('/rxs/rx1/', field);
     field = h5read(filename, fieldpath)';
     time = linspace(0, (iterations - 1) * dt, iterations)';    

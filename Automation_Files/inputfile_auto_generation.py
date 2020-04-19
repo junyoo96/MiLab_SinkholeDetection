@@ -11,13 +11,13 @@ TITLE= "B-scan of a cavity within a dielectric half-space"
 #================================================================
 #domain parameter
 #지하가 시작되는 지점(높이)
-DOMAIN_X_UNDERGROUND_START=1
+DOMAIN_Z_UNDERGROUND_START=1
 #안테나 띄울 공간 얼마나 확보할지
-DOMAIN_X_FREESPACE_OFFSET=0.1
+DOMAIN_Z_FREESPACE_OFFSET=0.1
 
-DOMAIN_X=DOMAIN_X_UNDERGROUND_START+DOMAIN_X_FREESPACE_OFFSET #1m + 0.1m(지표면에서 안테나 살짝 띄울공간 확보)
+DOMAIN_X=0.1
 DOMAIN_Y=0.1
-DOMAIN_Z=0.1
+DOMAIN_Z=DOMAIN_Z_UNDERGROUND_START+DOMAIN_Z_FREESPACE_OFFSET #1m + 0.1m(지표면에서 안테나 살짝 띄울공간 확보)
 
 #================================================================
 #dx_dy_dz parameter
@@ -54,7 +54,7 @@ WAVEFORM_TYPE="ricker"
 WAVEFORM_MAX_AMPLITUDE_MIN=1
 WAVEFORM_MAX_AMPLITUDE_MAX=1
 
-WAVEFORM_CENTER_FREQUENCY_MIN=0.2
+WAVEFORM_CENTER_FREQUENCY_MIN=0.4
 WAVEFORM_CENTER_FREQUENCY_MAX=0.8
 
 WAVEFORM_IDENTIFIER="my_pulse"
@@ -62,29 +62,33 @@ WAVEFORM_IDENTIFIER="my_pulse"
 #================================================================
 #hertzian_dipole
 #지표면에서 안테나 얼마나 띄울지
-ANTENNA_HEIGHT_OFFSET=0.05 #5cm
+ANTENNA_HEIGHT_OFFSET=0 #Don't use offset! It makes antenna figure disappear
 #PML에 안테나가 붙어었으면 안되서 좀 떨어뜨리기 위한 offset
-ANTENNA_Y_OFFSET=0.01
+ANTENNA_Y_OFFSET=0.02
 
 HERTZIAN_DIPOLE_SOURCE_POLARISATION="x"
-HERTZIAN_DIPOLE_SOURCE_X=DOMAIN_X_UNDERGROUND_START+ANTENNA_HEIGHT_OFFSET
+HERTZIAN_DIPOLE_SOURCE_X=0.05
 HERTZIAN_DIPOLE_SOURCE_Y=0+ANTENNA_Y_OFFSET
-HERTZIAN_DIPOLE_SOURCE_Z=0.05
+HERTZIAN_DIPOLE_SOURCE_Z=DOMAIN_Z_UNDERGROUND_START+ANTENNA_HEIGHT_OFFSET
 HERTZIAN_DIPOLE_SOURCE_IDENTIFIER="my_pulse"
 #예외처리
 #offset처리
 
 #================================================================
 #src_steps
+#src_steps must not be lower than dx_dy_dz value!!!
+
 SRC_STEPS_X=0
-SRC_STEPS_Y=0.01
+SRC_STEPS_Y=0.002
 SRC_STEPS_Z=0
 
 #예외처리
 #================================================================
 #rx(Reciever 좌표)
+SOURCE_RECEIVER_BETWEEN_OFFSET=0.005
+
 RX_X=HERTZIAN_DIPOLE_SOURCE_X
-RX_Y=HERTZIAN_DIPOLE_SOURCE_Y+SRC_STEPS_Y
+RX_Y=HERTZIAN_DIPOLE_SOURCE_Y+SOURCE_RECEIVER_BETWEEN_OFFSET
 RX_Z=HERTZIAN_DIPOLE_SOURCE_Z
 
 #예외처리
@@ -104,9 +108,9 @@ BOX_LOWER_LEFT_Y=0
 BOX_LOWER_LEFT_Z=0
 
 #box high coordinate
-BOX_HIGHER_RIGHT_X=1
+BOX_HIGHER_RIGHT_X=0.1
 BOX_HIGHER_RIGHT_Y=0.1
-BOX_HIGHER_RIGHT_Z=0.1
+BOX_HIGHER_RIGHT_Z=1
 
 #box material
 BOX_MATERIAL_IDENTIFIER="soil"
@@ -120,12 +124,12 @@ BOX_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 ##sphere(sinkhole)
 
 #sphere coordinate
-SPHERE_X_MIN=0.5
-SPHERE_X_MAX=0.5
+SPHERE_X_MIN=0.05
+SPHERE_X_MAX=0.05
 SPHERE_Y_MIN=0.05
 SPHERE_Y_MAX=0.05
-SPHERE_Z_MIN=0.05
-SPHERE_Z_MAX=0.05
+SPHERE_Z_MIN=0.85
+SPHERE_Z_MAX=0.85
 
 #sphere radius
 SPHERE_RADIUS_MIN=0.03
@@ -135,7 +139,7 @@ SPHERE_RADIUS_MAX=0.03
 SPHERE_MATERIAL="free_space"
 
 #dielectric smoothing activation
-SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION="n"
+SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION="y"
 
 #================================================================
 #geometry_view(모델의 기하학적인 정보를 file형태로 출력하게 하는 명령어)

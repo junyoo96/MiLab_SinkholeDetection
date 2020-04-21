@@ -8,7 +8,7 @@ WORKTABLE_PATH=$ABSOLUTE_PATH/Worktable
 numbers_to_generate=$1
 echo $numbers_to_generate
 
-trace_number=10
+trace_number=30
 
 for sinkhole_index in $(seq 1 $numbers_to_generate);
 do

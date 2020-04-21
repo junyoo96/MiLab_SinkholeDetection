@@ -89,7 +89,8 @@ SOURCE_RECEIVER_BETWEEN_OFFSET=0.005
 
 RX_X=HERTZIAN_DIPOLE_SOURCE_X
 RX_Y=HERTZIAN_DIPOLE_SOURCE_Y+SOURCE_RECEIVER_BETWEEN_OFFSET
-RX_Z=HERTZIAN_DIPOLE_SOURCE_Z
+# RX_Z=HERTZIAN_DIPOLE_SOURCE_Z
+RX_Z=1.05 #jun_modify
 
 #예외처리
 #================================================================
@@ -132,7 +133,7 @@ SPHERE_Z_MIN=0.85
 SPHERE_Z_MAX=0.85
 
 #sphere radius
-SPHERE_RADIUS_MIN=0.03
+SPHERE_RADIUS_MIN=0.01
 SPHERE_RADIUS_MAX=0.03
 
 #sphere material
@@ -159,7 +160,7 @@ GEOMETRY_VIEW_DY=DX_DY_DZ_Y
 GEOMETRY_VIEW_DZ=DX_DY_DZ_Z
 
 #input file과 동일한 경로에 저장될 geometry view의 file이름 설정
-GEOMETRY_VIEW_FILENAME="Line01_"
+GEOMETRY_VIEW_FILENAME=None
 #================================================================
 #================================================================
 ##Generation Code
@@ -273,7 +274,8 @@ def generate_sinkhole_sphere():
     sphere=f"#sphere: {sphere_x} {sphere_y} {sphere_z} {sphere_radius} {sphere_material} {sphere_dielectric_smoothing_activation}\n"
     text.write(sphere)
 
-def generate_geometry_view():
+def generate_geometry_view(iteration_number):
+    GEOMETRY_VIEW_FILENAME="sinkhole_%d_" % iteration_number    
 
     geometry_view_lower_left_x=GEOMETRY_VIEW_LOWER_LEFT_X
     geometry_view_lower_left_y=GEOMETRY_VIEW_LOWER_LEFT_Y
@@ -425,7 +427,7 @@ def auto_generation(iteration_number):
     # for i in range(1, iteration_number+1):
    
     #generate file
-    filepath="./Worktable/sinkhole_%d.in" % int(iteration_number)
+    filepath="./Worktable/sinkhole_%d.in" % iteration_number
     global text
     text=open(filepath,'w')
 
@@ -450,11 +452,11 @@ def auto_generation(iteration_number):
     generate_sinkhole_sphere()
 
     text.write("\n")
-    generate_geometry_view()
+    generate_geometry_view(iteration_number)
 
     text.close()
 
     print("Generation Done")
 
 if __name__ == '__main__':
-    auto_generation(sys.argv[1])
+    auto_generation(int(sys.argv[1]))

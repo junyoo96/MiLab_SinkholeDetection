@@ -49,6 +49,24 @@ MATERIAL_SOIL_MAGNETIC_LOSS_MAX=0
 MATERIAL_SOIL_IDENTIFIER="soil"
 
 #================================================================
+##material
+#soil
+MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN=4
+MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX=7
+
+MATERIAL_ASPHALT_CONDUCTIVITY_MIN=0.02
+MATERIAL_ASPHALT_CONDUCTIVITY_MAX=0.02
+
+MATERIAL_ASPHALT_RELATIVE_PERMEABILITY_MIN=1
+MATERIAL_ASPHALT_RELATIVE_PERMEABILITY_MAX=1
+
+MATERIAL_ASPHALT_MAGNETIC_LOSS_MIN=0
+MATERIAL_ASPHALT_MAGNETIC_LOSS_MAX=0
+
+MATERIAL_ASPHALT_IDENTIFIER="asphalt"
+
+
+#================================================================
 #waveform
 
 WAVEFORM_TYPE="ricker"
@@ -104,6 +122,27 @@ RX_STEPS_Z=0
 #예외처리
 
 #================================================================
+##box(asphalt area)
+#box low coordinate
+ASPHALT_THICKNESS=0.1
+
+ASPHALT_BOX_LOWER_LEFT_X=0
+ASPHALT_BOX_LOWER_LEFT_Y=0
+ASPHALT_BOX_LOWER_LEFT_Z=DOMAIN_Z_UNDERGROUND_START-ASPHALT_THICKNESS
+
+#box high coordinate
+ASPHALT_BOX_HIGHER_RIGHT_X=DOMAIN_X
+ASPHALT_BOX_HIGHER_RIGHT_Y=DOMAIN_Y
+ASPHALT_BOX_HIGHER_RIGHT_Z=DOMAIN_Z_UNDERGROUND_START
+
+#box material
+ASPHALT_BOX_MATERIAL_IDENTIFIER="asphalt"
+
+#dielectric smoothing activation
+ASPHALT_BOX_DIELECTRIC_SMOOTHING_ACTIVATION="n"
+
+
+#================================================================
 ##box(soil area)
 #box low coordinate
 BOX_LOWER_LEFT_X=0
@@ -113,7 +152,7 @@ BOX_LOWER_LEFT_Z=0
 #box high coordinate
 BOX_HIGHER_RIGHT_X=DOMAIN_X
 BOX_HIGHER_RIGHT_Y=DOMAIN_Y
-BOX_HIGHER_RIGHT_Z=DOMAIN_Z_UNDERGROUND_START
+BOX_HIGHER_RIGHT_Z=ASPHALT_BOX_LOWER_LEFT_Z
 
 #box material
 BOX_MATERIAL_IDENTIFIER="soil"
@@ -122,6 +161,7 @@ BOX_MATERIAL_IDENTIFIER="soil"
 BOX_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 
 #예외처리
+
 
 #================================================================
 ##sphere(cavity)
@@ -133,8 +173,8 @@ SPHERE_X_MIN=DOMAIN_X/2-SPHERE_MOVING_OFFSET
 SPHERE_X_MAX=DOMAIN_X/2+SPHERE_MOVING_OFFSET
 SPHERE_Y_MIN=DOMAIN_Y/2-SPHERE_MOVING_OFFSET
 SPHERE_Y_MAX=DOMAIN_Y/2+SPHERE_MOVING_OFFSET
-SPHERE_Z_MIN=DOMAIN_Z_UNDERGROUND_START/2-SPHERE_MOVING_OFFSET
-SPHERE_Z_MAX=DOMAIN_Z_UNDERGROUND_START/2+SPHERE_MOVING_OFFSET
+SPHERE_Z_MIN=BOX_HIGHER_RIGHT_Z/2-SPHERE_MOVING_OFFSET
+SPHERE_Z_MAX=BOX_HIGHER_RIGHT_Z/2+SPHERE_MOVING_OFFSET
 
 #sphere radius
 SPHERE_RADIUS_MIN=0.1
@@ -208,6 +248,24 @@ def generate_material_soil():
     material_soil=f"#material: {relative_permittivity} {conductivity} {relative_permeability} {magnetic_loss} {material_identifier}\n"
     text.write(material_soil)
 
+def generate_material_asphalt():
+
+    #relative permittivity
+    relative_permittivity=random_sampling(MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN, MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX)
+    #conductivity
+    conductivity=random_sampling(MATERIAL_ASPHALT_CONDUCTIVITY_MIN, MATERIAL_ASPHALT_CONDUCTIVITY_MAX)
+    #relative permeability
+    relative_permeability=random_sampling(MATERIAL_ASPHALT_RELATIVE_PERMEABILITY_MIN,MATERIAL_ASPHALT_RELATIVE_PERMEABILITY_MAX)
+    #magnetic loss
+    magnetic_loss=random_sampling(MATERIAL_ASPHALT_MAGNETIC_LOSS_MIN,MATERIAL_ASPHALT_MAGNETIC_LOSS_MAX)
+    #material identifier
+    material_identifier=MATERIAL_ASPHALT_IDENTIFIER
+
+
+    material_asphalt=f"#material: {relative_permittivity} {conductivity} {relative_permeability} {magnetic_loss} {material_identifier}\n"
+    text.write(material_asphalt)
+
+
 def generate_waveform():
     waveform_type=WAVEFORM_TYPE
     waveform_max_amplitude=random_sampling(WAVEFORM_MAX_AMPLITUDE_MIN, WAVEFORM_MAX_AMPLITUDE_MAX)
@@ -265,6 +323,22 @@ def generate_soil_box():
 
     soil_box = f"#box: {box_lower_left_x} {box_lower_left_y} {box_lower_left_z} {box_higher_right_x} {box_higher_right_y} {box_higher_right_z} {box_material_identifier} {box_dielectric_smoothing_activation}\n"
     text.write(soil_box)
+
+def generate_asphalt_box():
+    box_lower_left_x=ASPHALT_BOX_LOWER_LEFT_X
+    box_lower_left_y =ASPHALT_BOX_LOWER_LEFT_Y
+    box_lower_left_z =ASPHALT_BOX_LOWER_LEFT_Z
+
+    box_higher_right_x = ASPHALT_BOX_HIGHER_RIGHT_X
+    box_higher_right_y = ASPHALT_BOX_HIGHER_RIGHT_Y
+    box_higher_right_z = ASPHALT_BOX_HIGHER_RIGHT_Z
+
+    box_material_identifier=ASPHALT_BOX_MATERIAL_IDENTIFIER
+    box_dielectric_smoothing_activation=ASPHALT_BOX_DIELECTRIC_SMOOTHING_ACTIVATION
+
+    asphalt_box = f"#box: {box_lower_left_x} {box_lower_left_y} {box_lower_left_z} {box_higher_right_x} {box_higher_right_y} {box_higher_right_z} {box_material_identifier} {box_dielectric_smoothing_activation}\n"
+    text.write(asphalt_box)
+    
 
 def generate_cavity_sphere():
     sphere_x=random_sampling(SPHERE_X_MIN,SPHERE_X_MAX)
@@ -442,6 +516,7 @@ def cavity_generation(iteration_index):
 
     text.write("\n")
     generate_material_soil()
+    generate_material_asphalt()
     text.write("\n")
 
     generate_waveform()
@@ -451,6 +526,7 @@ def cavity_generation(iteration_index):
     generate_rx_steps()
 
     text.write("\n")
+    generate_asphalt_box()
     generate_soil_box()
     generate_cavity_sphere()
 
@@ -480,6 +556,7 @@ def subsoil_generation(iteration_index):
 
     text.write("\n")
     generate_material_soil()
+    generate_material_asphalt()
     text.write("\n")
 
     generate_waveform()
@@ -489,6 +566,7 @@ def subsoil_generation(iteration_index):
     generate_rx_steps()
 
     text.write("\n")
+    generate_asphalt_box()
     generate_soil_box()        
 
     text.write("\n")

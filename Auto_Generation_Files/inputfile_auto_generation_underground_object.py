@@ -33,6 +33,11 @@ TIME_WINDOW="15e-9"
 
 #================================================================
 ##material
+#free_space
+MATERIAL_FREESPACE_IDENTIFIER="free_space"
+
+#================================================================
+##material
 #soil
 MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN=10
 MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX=10
@@ -50,7 +55,7 @@ MATERIAL_SOIL_IDENTIFIER="soil"
 
 #================================================================
 ##material
-#soil
+#asphalt
 MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN=4
 MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX=7
 
@@ -65,6 +70,22 @@ MATERIAL_ASPHALT_MAGNETIC_LOSS_MAX=0
 
 MATERIAL_ASPHALT_IDENTIFIER="asphalt"
 
+#================================================================
+##material
+#water
+MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN=80
+MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX=80
+
+MATERIAL_WATER_CONDUCTIVITY_MIN=0.05
+MATERIAL_WATER_CONDUCTIVITY_MAX=0.05
+
+MATERIAL_WATER_RELATIVE_PERMEABILITY_MIN=1
+MATERIAL_WATER_RELATIVE_PERMEABILITY_MAX=1
+
+MATERIAL_WATER_MAGNETIC_LOSS_MIN=0
+MATERIAL_WATER_MAGNETIC_LOSS_MAX=0
+
+MATERIAL_WATER_IDENTIFIER="water"
 
 #================================================================
 #waveform
@@ -82,7 +103,7 @@ WAVEFORM_IDENTIFIER="my_pulse"
 #================================================================
 #hertzian_dipole
 #지표면에서 안테나 얼마나 띄울지
-ANTENNA_HEIGHT_OFFSET=0 #Don't use offset! It makes antenna figure disappear
+ANTENNA_HEIGHT_OFFSET=0.05 #Don't use offset! It makes antenna figure disappear
 #PML에 안테나가 붙어었으면 안되서 좀 떨어뜨리기 위한 offset
 ANTENNA_Y_OFFSET=0.25
 
@@ -265,6 +286,23 @@ def generate_material_asphalt():
     material_asphalt=f"#material: {relative_permittivity} {conductivity} {relative_permeability} {magnetic_loss} {material_identifier}\n"
     text.write(material_asphalt)
 
+def generate_material_water():
+
+    #relative permittivity
+    relative_permittivity=random_sampling(MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN, MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX)
+    #conductivity
+    conductivity=random_sampling(MATERIAL_WATER_CONDUCTIVITY_MIN, MATERIAL_WATER_CONDUCTIVITY_MAX)
+    #relative permeability
+    relative_permeability=random_sampling(MATERIAL_WATER_RELATIVE_PERMEABILITY_MIN,MATERIAL_WATER_RELATIVE_PERMEABILITY_MAX)
+    #magnetic loss
+    magnetic_loss=random_sampling(MATERIAL_WATER_MAGNETIC_LOSS_MIN,MATERIAL_WATER_MAGNETIC_LOSS_MAX)
+    #material identifier
+    material_identifier=MATERIAL_WATER_IDENTIFIER
+
+
+    material_water=f"#material: {relative_permittivity} {conductivity} {relative_permeability} {magnetic_loss} {material_identifier}\n"
+    text.write(material_water)
+
 
 def generate_waveform():
     waveform_type=WAVEFORM_TYPE
@@ -340,14 +378,21 @@ def generate_asphalt_box():
     text.write(asphalt_box)
     
 
-def generate_cavity_sphere():
+def generate_cavity_sphere(water=False):
     sphere_x=random_sampling(SPHERE_X_MIN,SPHERE_X_MAX)
     sphere_y=random_sampling(SPHERE_Y_MIN,SPHERE_Y_MAX)
     sphere_z=random_sampling(SPHERE_Z_MIN,SPHERE_Z_MAX)
     sphere_radius=random_sampling(SPHERE_RADIUS_MIN,SPHERE_RADIUS_MAX)
 
-    sphere_material=SPHERE_MATERIAL
-    sphere_dielectric_smoothing_activation=SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION
+    if water==False:
+        sphere_material=MATERIAL_FREESPACE_IDENTIFIER
+    else:
+        sphere_material=MATERIAL_WATER_IDENTIFIER
+
+    if water==False:
+        sphere_dielectric_smoothing_activation=SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION
+    else:
+        sphere_dielectric_smoothing_activation="n"
 
     sphere=f"#sphere: {sphere_x} {sphere_y} {sphere_z} {sphere_radius} {sphere_material} {sphere_dielectric_smoothing_activation}\n"
     text.write(sphere)
@@ -498,7 +543,7 @@ def check_parameter_range():
 
         sys.exit()
 
-def cavity_generation(iteration_index):
+def cavity_generation(iteration_index,water=False):
 
     print("Starting Cavity_Input_File_Generation...")
     check_parameter_range()
@@ -517,6 +562,8 @@ def cavity_generation(iteration_index):
     text.write("\n")
     generate_material_soil()
     generate_material_asphalt()
+    if water==True:
+        generate_material_water()
     text.write("\n")
 
     generate_waveform()
@@ -528,7 +575,10 @@ def cavity_generation(iteration_index):
     text.write("\n")
     generate_asphalt_box()
     generate_soil_box()
-    generate_cavity_sphere()
+    if water==True:
+        generate_cavity_sphere(water=True)
+    else:
+        generate_cavity_sphere()
 
     text.write("\n")
     generate_geometry_view(iteration_index)
@@ -587,7 +637,7 @@ def auto_generation(underground_object_type,iteration_index):
     TITLE= "B-scan of a %s" % UNDERGROUND_OBJECT_TYPE   
 
     if underground_object_type=="cavity":
-        cavity_generation(iteration_index)
+        cavity_generation(iteration_index,water=True)
     elif underground_object_type=="manhole":
         print("manhole")
     elif underground_object_type=="pothole":

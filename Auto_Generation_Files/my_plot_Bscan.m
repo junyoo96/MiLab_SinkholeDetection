@@ -13,8 +13,7 @@ Files=dir('./Worktable/*.out')
 merged_out_filename=''
 
 for k=1:length(Files)
-    merged_out_filename=Files(k).name
-    
+    merged_out_filename=Files(k).name    
 end
 
 fprintf(merged_out_filename)

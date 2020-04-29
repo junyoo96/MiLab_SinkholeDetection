@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files
+INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/InputFile_Auto_Generation_Modules/main.py
 INPUT_FILES_PATH=$ABSOLUTE_PATH/Input_Files
 MERGED_OUT_FILES_PATH=$ABSOLUTE_PATH/Merged_Out_Files
 WORKTABLE_PATH=$ABSOLUTE_PATH/Worktable
@@ -11,16 +12,15 @@ numbers_to_generate=$2
 #convert to lower case
 underground_object_type_to_generate=$(echo "$underground_object_type_to_generate" | tr '[:upper:]' '[:lower:]')
 
-
-echo 'hello'
 echo ${underground_object_type_to_generate}
 
+#gprmax b-scan trace number : 10 
 trace_number=10
 
 for underground_object_index in $(seq 1 $numbers_to_generate);
 do
     #generate inputfile
-    python $ABSOLUTE_PATH/inputfile_auto_generation_underground_object.py $underground_object_type_to_generate $underground_object_index
+    python $INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH $underground_object_type_to_generate $underground_object_index
 
     #run gprmax with inputfile    
     for entry in $WORKTABLE_PATH/*.in;

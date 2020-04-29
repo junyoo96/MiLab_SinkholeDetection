@@ -595,7 +595,7 @@ def auto_generation(underground_object_type,iteration_index):
 
     print(os.path.realpath(__file__))
     # generate file
-    filepath = os.path.dirname(__file__)+"/../Worktable/%s_%d.in" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
+    filepath = os.path.dirname(__file__)+"/../../Worktable/%s_%d.in" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
     global textfile
     textfile = open(filepath, 'w')
 

@@ -17,6 +17,7 @@ from Waveform import Waveform
 
 import sys
 import os.path
+import math
 # Underground Object Generation File
 
 UNDERGROUND_OBJECT_TYPE = None
@@ -213,13 +214,13 @@ SPHERE_X_MIN = DOMAIN_X / 2 - SPHERE_MOVING_OFFSET
 SPHERE_X_MAX = DOMAIN_X / 2 + SPHERE_MOVING_OFFSET
 SPHERE_Y_MIN = DOMAIN_Y / 2 - SPHERE_MOVING_OFFSET
 SPHERE_Y_MAX = DOMAIN_Y / 2 + SPHERE_MOVING_OFFSET
-SPHERE_Z_MIN = BOX_HIGHER_RIGHT_Z / 2 - SPHERE_MOVING_OFFSET
-SPHERE_Z_MAX = BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET
+SPHERE_Z_MIN = round(BOX_HIGHER_RIGHT_Z / 2 - SPHERE_MOVING_OFFSET,3)
+SPHERE_Z_MAX = round(BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET,3)
 
 # sphere radius
 SPHERE_RADIUS_MIN = 0.1
 # 수정해야함
-SPHERE_RADIUS_MAX = 0.1
+SPHERE_RADIUS_MAX = 0.25
 
 # sphere material
 SPHERE_MATERIAL = "free_space"
@@ -429,16 +430,19 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
     cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
     cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
 
-    to_generate_cylinder_num=int(cavity_radius_determined/(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS))*2-1
+    to_generate_cylinder_num=int(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS)*2-1    
+    
+
     height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num
+    
 
-    to_genearte_cylinder_with_water_portion_num=int(to_generate_cylinder_num/water_portion)
-
+    to_genearte_cylinder_with_water_portion_num=int(to_generate_cylinder_num*water_portion)
+    if to_genearte_cylinder_with_water_portion_num!=0:
+        to_genearte_cylinder_with_water_portion_num+=1
+    
     current_cylinder_lower_x=cavity_lower_x_determined
     current_cylinder_lower_y= cavity_lower_y_determined
-    current_cylinder_lower_z = cavity_lower_z_determined
-    # current_cylinder_higher_x=cavity_lower_x_determined
-    # current_cylinder_higher_y = cavity_lower_y_determined
+    current_cylinder_lower_z = cavity_lower_z_determined   
     current_cylinder_higher_z = cavity_lower_z_determined+height_per_cylinder
     current_cylinder_radius=MINIMUM_CAVITY_CYLINDER_END_RADIUS
     current_material_identifier=None
@@ -456,11 +460,11 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
         cavity_cylinder=Cylinder(
             current_cylinder_lower_x,
             current_cylinder_lower_y,
-            current_cylinder_lower_z,
+            round(current_cylinder_lower_z,2),
             current_cylinder_lower_x,
             current_cylinder_lower_y,
-            current_cylinder_lower_z+height_per_cylinder,
-            current_cylinder_radius,
+            round(current_cylinder_lower_z+height_per_cylinder,2),
+            round(current_cylinder_radius,2),
             current_material_identifier,
             current_dielectric_smoothing_activation
         )
@@ -469,7 +473,7 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
 
         current_cylinder_lower_z +=height_per_cylinder
 
-        if i<to_generate_cylinder_num/2+1:
+        if i<to_generate_cylinder_num/2:
             current_cylinder_radius+=MINIMUM_CAVITY_CYLINDER_END_RADIUS
         else:
             current_cylinder_radius -= MINIMUM_CAVITY_CYLINDER_END_RADIUS
@@ -610,7 +614,9 @@ def cavity_generation(iteration_index, water=False):
     generate_soil_box()
     if water == True:
         # generate_cavity_sphere(water=True)
-        generate_cavity_cylinder(water=True,water_portion=0.5)
+        CAVITY_WATER_PORTION_MIN=0.0
+        CAVITY_WATER_PORTION_MAX=1.0
+        generate_cavity_cylinder(water=True,water_portion=utility.random_sampling(CAVITY_WATER_PORTION_MIN,CAVITY_WATER_PORTION_MAX))
     else:
         generate_cavity_sphere()
 

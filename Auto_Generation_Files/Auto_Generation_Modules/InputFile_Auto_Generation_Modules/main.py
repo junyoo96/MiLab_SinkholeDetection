@@ -158,7 +158,7 @@ RX_STEPS_Z = SRC_STEPS_Z
 # ================================================================
 ##box(asphalt area)
 # box low coordinate
-ASPHALT_THICKNESS = 0.1
+ASPHALT_THICKNESS = 0.2
 
 ASPHALT_BOX_LOWER_LEFT_X = 0
 ASPHALT_BOX_LOWER_LEFT_Y = 0

@@ -8,10 +8,12 @@ from Rx import Rx
 from Rx_Steps import Rx_Steps
 from SRC_Steps import SRC_Steps
 from Sphere import Sphere
+from Cylinder import Cylinder
 from Time_Window import Time_Window
 from Title import Title
 from Utility import Utility
 from Waveform import Waveform
+
 
 import sys
 import os.path
@@ -23,6 +25,11 @@ UNDERGROUND_OBJECT_TYPE = None
 # ================================================================
 # titie parameter
 TITLE = None
+
+# ================================================================
+#dielectric smoothing
+DIELECTRIC_SMOOTHING_ACTIVATION_YES="y"
+DIELECTRIC_SMOOTHING_ACTIVATION_NO="n"
 
 # ================================================================
 # domain parameter
@@ -211,13 +218,16 @@ SPHERE_Z_MAX = BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET
 
 # sphere radius
 SPHERE_RADIUS_MIN = 0.1
-SPHERE_RADIUS_MAX = 0.25
+# 수정해야함
+SPHERE_RADIUS_MAX = 0.1
 
 # sphere material
 SPHERE_MATERIAL = "free_space"
 
 # dielectric smoothing activation
 SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION = "y"
+
+
 
 # ================================================================
 # geometry_view(모델의 기하학적인 정보를 file형태로 출력하게 하는 명령어)
@@ -385,6 +395,7 @@ def generate_asphalt_box():
 
    asphalt_box.write_textfile(textfile)
 
+#generate cavity by shape of sphere
 def generate_cavity_sphere(water=False):
 
     if water == False:
@@ -407,6 +418,61 @@ def generate_cavity_sphere(water=False):
     )
 
     cavity_sphere.write_textfile(textfile)
+
+#generate cavity by shape of cylinder
+def generate_cavity_cylinder(water=False, water_portion=0.5):
+
+    MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.01 #1
+
+    cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
+    cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
+    cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
+    cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
+
+    to_generate_cylinder_num=int(cavity_radius_determined/(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS))*2-1
+    height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num
+
+    to_genearte_cylinder_with_water_portion_num=int(to_generate_cylinder_num/water_portion)
+
+    current_cylinder_lower_x=cavity_lower_x_determined
+    current_cylinder_lower_y= cavity_lower_y_determined
+    current_cylinder_lower_z = cavity_lower_z_determined
+    # current_cylinder_higher_x=cavity_lower_x_determined
+    # current_cylinder_higher_y = cavity_lower_y_determined
+    current_cylinder_higher_z = cavity_lower_z_determined+height_per_cylinder
+    current_cylinder_radius=MINIMUM_CAVITY_CYLINDER_END_RADIUS
+    current_material_identifier=None
+    current_dielectric_smoothing_activation = None
+
+    for i in range(1,to_generate_cylinder_num+1):
+
+        if i<=to_genearte_cylinder_with_water_portion_num:
+            current_material_identifier = MATERIAL_WATER_IDENTIFIER
+            current_dielectric_smoothing_activation=DIELECTRIC_SMOOTHING_ACTIVATION_NO
+        else:
+            current_material_identifier = MATERIAL_FREESPACE_IDENTIFIER
+            current_dielectric_smoothing_activation = DIELECTRIC_SMOOTHING_ACTIVATION_YES
+
+        cavity_cylinder=Cylinder(
+            current_cylinder_lower_x,
+            current_cylinder_lower_y,
+            current_cylinder_lower_z,
+            current_cylinder_lower_x,
+            current_cylinder_lower_y,
+            current_cylinder_lower_z+height_per_cylinder,
+            current_cylinder_radius,
+            current_material_identifier,
+            current_dielectric_smoothing_activation
+        )
+
+        cavity_cylinder.write_textfile(textfile)
+
+        current_cylinder_lower_z +=height_per_cylinder
+
+        if i<to_generate_cylinder_num/2+1:
+            current_cylinder_radius+=MINIMUM_CAVITY_CYLINDER_END_RADIUS
+        else:
+            current_cylinder_radius -= MINIMUM_CAVITY_CYLINDER_END_RADIUS
 
 def generate_geometry_view(iteration_index):
     GEOMETRY_VIEW_FILENAME = "%s_%d_" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
@@ -543,7 +609,8 @@ def cavity_generation(iteration_index, water=False):
     generate_asphalt_box()
     generate_soil_box()
     if water == True:
-        generate_cavity_sphere(water=True)
+        # generate_cavity_sphere(water=True)
+        generate_cavity_cylinder(water=True,water_portion=0.5)
     else:
         generate_cavity_sphere()
 

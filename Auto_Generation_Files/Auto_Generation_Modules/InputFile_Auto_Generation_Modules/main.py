@@ -125,7 +125,8 @@ WAVEFORM_IDENTIFIER = "my_pulse"
 # ================================================================
 # hertzian_dipole
 # 지표면에서 안테나 얼마나 띄울지
-ANTENNA_HEIGHT_OFFSET = 0.05  # Don't use offset! It makes antenna figure disappear
+#jun modify
+ANTENNA_HEIGHT_OFFSET = 0.02  # 2cm
 # PML에 안테나가 붙어었으면 안되서 좀 떨어뜨리기 위한 offset
 ANTENNA_Y_OFFSET = 0.25
 
@@ -166,7 +167,7 @@ RX_STEPS_Z = SRC_STEPS_Z
 # ================================================================
 ##box(asphalt area)
 # box low coordinate
-ASPHALT_THICKNESS = 0.2
+ASPHALT_THICKNESS = 0.1
 
 ASPHALT_BOX_LOWER_LEFT_X = 0
 ASPHALT_BOX_LOWER_LEFT_Y = 0

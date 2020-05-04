@@ -521,7 +521,7 @@ def generate_pipe(water=False):
     pipe=None
     if water==True:
         pipe = Pipe(pipe_material=MATERIAL_CONCRETE_IDENTIFIER,
-                    pipe_dielectirc_smoothing=MATERIAL_CONCRETE_DIELECTRIC_SMOOTHING_ACTIVATION,
+                    pipe_dielectirc_smoothing_activation=MATERIAL_CONCRETE_DIELECTRIC_SMOOTHING_ACTIVATION,
                     water=water,
                     pipe_content_material_identifier=MATERIAL_WATER_IDENTIFIER,
                     pipe_content_dielectric_smoothing_activation=MATERIAL_WATER_DIELECTRIC_SMOOTHING_ACTIVATION
@@ -529,7 +529,7 @@ def generate_pipe(water=False):
 
     else:
         pipe = Pipe(pipe_material=MATERIAL_CONCRETE_IDENTIFIER,
-                    pipe_dielectirc_smoothing=MATERIAL_CONCRETE_DIELECTRIC_SMOOTHING_ACTIVATION,
+                    pipe_dielectirc_smoothing_activation=MATERIAL_CONCRETE_DIELECTRIC_SMOOTHING_ACTIVATION,
                     water=water,
                     pipe_content_material_identifier=MATERIAL_FREESPACE_IDENTIFIER,
                     pipe_content_dielectric_smoothing_activation=MATERIAL_FREESPACE_DIELECTRIC_SMOOTHING_ACTIVATION

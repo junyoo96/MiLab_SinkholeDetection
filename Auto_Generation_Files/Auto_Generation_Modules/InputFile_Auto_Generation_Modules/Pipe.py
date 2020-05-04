@@ -3,9 +3,9 @@ from sympy import Symbol, solve
 from Cylinder import Cylinder
 
 class Pipe(Utility):
-    def __init__(self, pipe_material, pipe_dielectirc_smoothing, pipe_content_material_identifier, pipe_content_dielectric_smoothing_activation, water=False):
+    def __init__(self, pipe_material, pipe_dielectirc_smoothing_activation, pipe_content_material_identifier, pipe_content_dielectric_smoothing_activation, water=False):
         self.pipe_material = pipe_material
-        self.pipe_dielectric_smoothing = pipe_dielectirc_smoothing
+        self.pipe_dielectric_smoothing_activation = pipe_dielectirc_smoothing_activation
         self.pipe_pass_point_y_range_offset = 0.02
         self.pipe_thickness = 0.2
         self.water=water

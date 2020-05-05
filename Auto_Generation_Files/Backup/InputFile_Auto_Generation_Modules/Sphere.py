@@ -1,7 +1,7 @@
 from Utility import Utility
 
 class Sphere(Utility):
-    def __init__(self, x,y,z,radius,material,dielectric_smoothing_activation):
+    def __init__(self,x,y,z,radius,material,dielectric_smoothing_activation):
         self.x=x
         self.y=y
         self.z=z

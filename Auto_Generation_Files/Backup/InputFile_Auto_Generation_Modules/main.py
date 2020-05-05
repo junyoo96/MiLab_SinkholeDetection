@@ -8,13 +8,17 @@ from Rx import Rx
 from Rx_Steps import Rx_Steps
 from SRC_Steps import SRC_Steps
 from Sphere import Sphere
+from Cylinder import Cylinder
 from Time_Window import Time_Window
 from Title import Title
 from Utility import Utility
 from Waveform import Waveform
+from Pipe import Pipe
+
 
 import sys
 import os.path
+import math
 # Underground Object Generation File
 
 UNDERGROUND_OBJECT_TYPE = None
@@ -23,6 +27,11 @@ UNDERGROUND_OBJECT_TYPE = None
 # ================================================================
 # titie parameter
 TITLE = None
+
+# ================================================================
+#dielectric smoothing
+DIELECTRIC_SMOOTHING_ACTIVATION_YES="y"
+DIELECTRIC_SMOOTHING_ACTIVATION_NO="n"
 
 # ================================================================
 # domain parameter
@@ -49,6 +58,7 @@ TIME_WINDOW = "15e-9"
 ##material
 # free_space
 MATERIAL_FREESPACE_IDENTIFIER = "free_space"
+MATERIAL_FREESPACE_DIELECTRIC_SMOOTHING_ACTIVATION= "y"
 
 # ================================================================
 ##material
@@ -83,6 +93,7 @@ MATERIAL_ASPHALT_MAGNETIC_LOSS_MIN = 0
 MATERIAL_ASPHALT_MAGNETIC_LOSS_MAX = 0
 
 MATERIAL_ASPHALT_IDENTIFIER = "asphalt"
+MATERIAL_ASPHALT_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 
 # ================================================================
 ##material
@@ -100,6 +111,25 @@ MATERIAL_WATER_MAGNETIC_LOSS_MIN = 0
 MATERIAL_WATER_MAGNETIC_LOSS_MAX = 0
 
 MATERIAL_WATER_IDENTIFIER = "water"
+MATERIAL_WATER_DIELECTRIC_SMOOTHING_ACTIVATION="n"
+
+# ================================================================
+##material
+# concrete
+MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MIN = 6
+MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MAX = 6
+
+MATERIAL_CONCRETE_CONDUCTIVITY_MIN = 0.01
+MATERIAL_CONCRETE_CONDUCTIVITY_MAX = 0.01
+
+MATERIAL_CONCRETE_RELATIVE_PERMEABILITY_MIN = 1
+MATERIAL_CONCRETE_RELATIVE_PERMEABILITY_MAX = 1
+
+MATERIAL_CONCRETE_MAGNETIC_LOSS_MIN = 0
+MATERIAL_CONCRETE_MAGNETIC_LOSS_MAX = 0
+
+MATERIAL_CONCRETE_IDENTIFIER = "concrete"
+MATERIAL_CONCRETE_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 
 # ================================================================
 # waveform
@@ -109,6 +139,9 @@ WAVEFORM_TYPE = "ricker"
 WAVEFORM_MAX_AMPLITUDE_MIN = 1
 WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
+# WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
+# WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
+
 WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
 WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
@@ -117,7 +150,8 @@ WAVEFORM_IDENTIFIER = "my_pulse"
 # ================================================================
 # hertzian_dipole
 # 지표면에서 안테나 얼마나 띄울지
-ANTENNA_HEIGHT_OFFSET = 0.05  # Don't use offset! It makes antenna figure disappear
+#jun modify
+ANTENNA_HEIGHT_OFFSET = 0.02  # 2cm
 # PML에 안테나가 붙어었으면 안되서 좀 떨어뜨리기 위한 offset
 ANTENNA_Y_OFFSET = 0.25
 
@@ -158,7 +192,7 @@ RX_STEPS_Z = SRC_STEPS_Z
 # ================================================================
 ##box(asphalt area)
 # box low coordinate
-ASPHALT_THICKNESS = 0.1
+ASPHALT_THICKNESS = 0.2 # 20cm
 
 ASPHALT_BOX_LOWER_LEFT_X = 0
 ASPHALT_BOX_LOWER_LEFT_Y = 0
@@ -197,7 +231,7 @@ BOX_DIELECTRIC_SMOOTHING_ACTIVATION = "n"
 
 
 # ================================================================
-##sphere(cavity)
+##cavity information
 
 SPHERE_MOVING_OFFSET = 0.05
 
@@ -206,11 +240,12 @@ SPHERE_X_MIN = DOMAIN_X / 2 - SPHERE_MOVING_OFFSET
 SPHERE_X_MAX = DOMAIN_X / 2 + SPHERE_MOVING_OFFSET
 SPHERE_Y_MIN = DOMAIN_Y / 2 - SPHERE_MOVING_OFFSET
 SPHERE_Y_MAX = DOMAIN_Y / 2 + SPHERE_MOVING_OFFSET
-SPHERE_Z_MIN = BOX_HIGHER_RIGHT_Z / 2 - SPHERE_MOVING_OFFSET
-SPHERE_Z_MAX = BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET
+SPHERE_Z_MIN = round(BOX_HIGHER_RIGHT_Z / 2 - SPHERE_MOVING_OFFSET,3)
+SPHERE_Z_MAX = round(BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET,3)
 
 # sphere radius
 SPHERE_RADIUS_MIN = 0.1
+# 수정해야함
 SPHERE_RADIUS_MAX = 0.25
 
 # sphere material
@@ -218,6 +253,12 @@ SPHERE_MATERIAL = "free_space"
 
 # dielectric smoothing activation
 SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION = "y"
+
+#cavity water portion
+CAVITY_WATER_PORTION_MIN=0.0
+CAVITY_WATER_PORTION_MAX=1.0
+
+
 
 # ================================================================
 # geometry_view(모델의 기하학적인 정보를 file형태로 출력하게 하는 명령어)
@@ -302,6 +343,17 @@ def generate_material_water():
 
     material_water.write_textfile(textfile)
 
+def generate_material_concrete():
+    material_concrete=Material(
+        utility.random_sampling(MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MIN,MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MAX),
+        utility.random_sampling(MATERIAL_CONCRETE_CONDUCTIVITY_MIN,MATERIAL_CONCRETE_CONDUCTIVITY_MAX),
+        utility.random_sampling(MATERIAL_CONCRETE_RELATIVE_PERMEABILITY_MIN,MATERIAL_CONCRETE_RELATIVE_PERMEABILITY_MAX),
+        utility.random_sampling(MATERIAL_CONCRETE_MAGNETIC_LOSS_MIN,MATERIAL_CONCRETE_MAGNETIC_LOSS_MAX),
+        MATERIAL_CONCRETE_IDENTIFIER
+    )
+
+    material_concrete.write_textfile(textfile)
+
 def generate_waveform():
 
     waveform=Waveform(
@@ -385,6 +437,7 @@ def generate_asphalt_box():
 
    asphalt_box.write_textfile(textfile)
 
+#generate cavity by shape of sphere
 def generate_cavity_sphere(water=False):
 
     if water == False:
@@ -408,6 +461,90 @@ def generate_cavity_sphere(water=False):
 
     cavity_sphere.write_textfile(textfile)
 
+#generate cavity by shape of cylinder
+def generate_cavity_cylinder(water=False, water_portion=0.5):
+
+    MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.01 #1
+
+    cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
+    cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
+    cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
+    cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
+
+    to_generate_cylinder_num=int(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS)*2-1
+
+    height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num
+
+    to_genearte_cylinder_with_water_portion_num=int(to_generate_cylinder_num*water_portion)
+    if to_genearte_cylinder_with_water_portion_num!=0:
+        to_genearte_cylinder_with_water_portion_num+=1
+    
+    current_cylinder_lower_x=cavity_lower_x_determined
+    current_cylinder_lower_y= cavity_lower_y_determined
+    current_cylinder_lower_z = cavity_lower_z_determined   
+    current_cylinder_higher_z = cavity_lower_z_determined+height_per_cylinder
+    current_cylinder_radius=MINIMUM_CAVITY_CYLINDER_END_RADIUS
+    current_material_identifier=None
+    current_dielectric_smoothing_activation = None
+
+    for i in range(1,to_generate_cylinder_num+1):
+
+        if i<=to_genearte_cylinder_with_water_portion_num:
+            current_material_identifier = MATERIAL_WATER_IDENTIFIER
+            current_dielectric_smoothing_activation=DIELECTRIC_SMOOTHING_ACTIVATION_NO
+        else:
+            current_material_identifier = MATERIAL_FREESPACE_IDENTIFIER
+            current_dielectric_smoothing_activation = DIELECTRIC_SMOOTHING_ACTIVATION_YES
+
+        cavity_cylinder=Cylinder(
+            current_cylinder_lower_x,
+            current_cylinder_lower_y,
+            round(current_cylinder_lower_z,2),
+            current_cylinder_lower_x,
+            current_cylinder_lower_y,
+            round(current_cylinder_lower_z+height_per_cylinder,2),
+            round(current_cylinder_radius,2),
+            current_material_identifier,
+            current_dielectric_smoothing_activation
+        )
+
+        cavity_cylinder.write_textfile(textfile)
+
+        current_cylinder_lower_z +=height_per_cylinder
+
+        if i<to_generate_cylinder_num/2:
+            current_cylinder_radius+=MINIMUM_CAVITY_CYLINDER_END_RADIUS
+        else:
+            current_cylinder_radius -= MINIMUM_CAVITY_CYLINDER_END_RADIUS
+
+def generate_pipe(water=False):
+    pipe=None
+    if water==True:
+        pipe = Pipe(pipe_material=MATERIAL_CONCRETE_IDENTIFIER,
+                    pipe_dielectirc_smoothing_activation=MATERIAL_CONCRETE_DIELECTRIC_SMOOTHING_ACTIVATION,
+                    water=water,
+                    pipe_content_material_identifier=MATERIAL_WATER_IDENTIFIER,
+                    pipe_content_dielectric_smoothing_activation=MATERIAL_WATER_DIELECTRIC_SMOOTHING_ACTIVATION
+                    )
+
+    else:
+        pipe = Pipe(pipe_material=MATERIAL_CONCRETE_IDENTIFIER,
+                    pipe_dielectirc_smoothing_activation=MATERIAL_CONCRETE_DIELECTRIC_SMOOTHING_ACTIVATION,
+                    water=water,
+                    pipe_content_material_identifier=MATERIAL_FREESPACE_IDENTIFIER,
+                    pipe_content_dielectric_smoothing_activation=MATERIAL_FREESPACE_DIELECTRIC_SMOOTHING_ACTIVATION
+                    )
+
+
+    pipe.generate_pipe_with_cylinder(DOMAIN_X,
+                                 DOMAIN_Y,
+                                 DOMAIN_Z,
+                                 ANTENNA_Y_OFFSET,
+                                 textfile
+                                 )
+
+    textfile.write("\n")
+
 def generate_geometry_view(iteration_index):
     GEOMETRY_VIEW_FILENAME = "%s_%d_" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
 
@@ -425,6 +562,24 @@ def generate_geometry_view(iteration_index):
     )
 
     geometry_view.write_textfile(textfile)
+
+
+def generate_model_environment_setting():
+    generate_title()
+    generate_domain()
+    generate_dx_dz_dy()
+    generate_time_window()
+
+    textfile.write("\n")
+
+def generate_waveform_setting():
+    generate_waveform()
+    generate_hertzian_dipole()
+    generate_rx()
+    generate_src_steps()
+    generate_rx_steps()
+
+    textfile.write("\n")
 
 # ================================================================
 def check_parameter_range():
@@ -521,63 +676,68 @@ def cavity_generation(iteration_index, water=False):
     print("Starting Cavity_Input_File_Generation...")
 
     ##write parameters on file
-    generate_title()
-    generate_domain()
-    generate_dx_dz_dy()
-    generate_time_window()
+    generate_model_environment_setting()
 
-    textfile.write("\n")
     generate_material_soil()
     generate_material_asphalt()
     if water == True:
         generate_material_water()
     textfile.write("\n")
 
-    generate_waveform()
-    generate_hertzian_dipole()
-    generate_rx()
-    generate_src_steps()
-    generate_rx_steps()
+    generate_waveform_setting()
 
-    textfile.write("\n")
     generate_asphalt_box()
     generate_soil_box()
     if water == True:
-        generate_cavity_sphere(water=True)
+        generate_cavity_cylinder(water=True,water_portion=utility.random_sampling(CAVITY_WATER_PORTION_MIN,CAVITY_WATER_PORTION_MAX))
     else:
         generate_cavity_sphere()
-
     textfile.write("\n")
+
     generate_geometry_view(iteration_index)
 
     textfile.close()
+# ================================================================
+def pipe_generation(iteration_index,water=False):
+    print("Starting Pipe_Input_File_Generation...")
 
+    ##write parameters on file
+    generate_model_environment_setting()
+
+    generate_material_soil()
+    generate_material_asphalt()
+    if water == True:
+        generate_material_water()
+    generate_material_concrete()
+    textfile.write("\n")
+
+    generate_waveform_setting()
+
+    generate_asphalt_box()
+    generate_soil_box()
+
+    generate_pipe(water)
+
+    generate_geometry_view(iteration_index)
+
+    textfile.close()
 # ================================================================
 def subsoil_generation(iteration_index):
     print("Starting Subsoil_Input_File_Generation...")
 
     ##write parameters on file
-    generate_title()
-    generate_domain()
-    generate_dx_dz_dy()
-    generate_time_window()
+    generate_model_environment_setting()
 
-    textfile.write("\n")
     generate_material_soil()
     generate_material_asphalt()
     textfile.write("\n")
 
-    generate_waveform()
-    generate_hertzian_dipole()
-    generate_rx()
-    generate_src_steps()
-    generate_rx_steps()
+    generate_waveform_setting()
 
-    textfile.write("\n")
     generate_asphalt_box()
     generate_soil_box()
-
     textfile.write("\n")
+
     generate_geometry_view(iteration_index)
 
     textfile.close()
@@ -595,7 +755,7 @@ def auto_generation(underground_object_type,iteration_index):
 
     print(os.path.realpath(__file__))
     # generate file
-    filepath = os.path.dirname(__file__)+"/../Worktable/%s_%d.in" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
+    filepath = os.path.dirname(__file__)+"/../../Worktable/%s_%d.in" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
     global textfile
     textfile = open(filepath, 'w')
 
@@ -608,7 +768,7 @@ def auto_generation(underground_object_type,iteration_index):
     elif underground_object_type=="pothole":
         print("pothole")
     elif underground_object_type=="pipe":
-        print("pipe")
+        pipe_generation(iteration_index,water=True)
     elif underground_object_type=="subsoil":
         subsoil_generation(iteration_index)
     else:

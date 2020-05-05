@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files
-INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/InputFile_Auto_Generation_Modules/main.py
+INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/Auto_Generation_Modules/InputFile_Auto_Generation_Modules/main.py
 INPUT_FILES_PATH=$ABSOLUTE_PATH/Input_Files
 MERGED_OUT_FILES_PATH=$ABSOLUTE_PATH/Merged_Out_Files
 WORKTABLE_PATH=$ABSOLUTE_PATH/Worktable
@@ -31,10 +31,9 @@ do
 
     #make merged_out file ( remove other out files )
     python -m tools.outputfiles_merge $WORKTABLE_PATH/${underground_object_type_to_generate}_$underground_object_index --remove-files
-
     
     #make image file (convert merged_out file to image file)    
-    sudo /usr/local/MATLAB/R2019b/bin/matlab -nodisplay -nosplash -nodesktop -r "run('my_plot_Bscan.m');exit;"    
+    sudo /usr/local/MATLAB/R2019b/bin/matlab -nodisplay -nosplash -nodesktop -r "run('./MergedFile_To_Image_Auto_Converter_Modules/plot_Bscan_ed.m');exit;"    
 
     #remove vti files
     

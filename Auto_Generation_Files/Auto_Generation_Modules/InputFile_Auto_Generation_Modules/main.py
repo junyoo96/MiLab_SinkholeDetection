@@ -14,6 +14,7 @@ from Title import Title
 from Utility import Utility
 from Waveform import Waveform
 from Pipe import Pipe
+from Manhole import Manhole
 
 
 import sys
@@ -130,6 +131,12 @@ MATERIAL_CONCRETE_MAGNETIC_LOSS_MAX = 0
 
 MATERIAL_CONCRETE_IDENTIFIER = "concrete"
 MATERIAL_CONCRETE_DIELECTRIC_SMOOTHING_ACTIVATION="n"
+
+# ================================================================
+##material
+# METAL(Perfect electric Conductor)
+MATERIAL_PEC_IDENTIFIER = "pec"
+MATERIAL_PEC_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 
 # ================================================================
 # waveform
@@ -354,6 +361,7 @@ def generate_material_concrete():
 
     material_concrete.write_textfile(textfile)
 
+
 def generate_waveform():
 
     waveform=Waveform(
@@ -545,6 +553,24 @@ def generate_pipe(water=False):
 
     textfile.write("\n")
 
+def generate_manhole(water):
+    manhole=Manhole(manhole_cover_material=MATERIAL_PEC_IDENTIFIER,
+                    manhole_cover_dielectric_smoothing_activation=MATERIAL_PEC_DIELECTRIC_SMOOTHING_ACTIVATION,
+                    water_material_identifier=MATERIAL_WATER_IDENTIFIER,
+                    water_dielectric_smoothing_activation=MATERIAL_WATER_DIELECTRIC_SMOOTHING_ACTIVATION,
+                    free_space_material_identifier=MATERIAL_FREESPACE_IDENTIFIER,
+                    free_space_dielectric_smoothing_activation=MATERIAL_FREESPACE_DIELECTRIC_SMOOTHING_ACTIVATION,
+                    water=water
+    )
+
+    manhole.generate_manhole(DOMAIN_X,
+                             DOMAIN_Y,
+                             DOMAIN_Z_UNDERGROUND_START,
+                             ANTENNA_Y_OFFSET,
+                             textfile)
+
+    textfile.write("\n")
+
 def generate_geometry_view(iteration_index):
     GEOMETRY_VIEW_FILENAME = "%s_%d_" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
 
@@ -722,6 +748,30 @@ def pipe_generation(iteration_index,water=False):
 
     textfile.close()
 # ================================================================
+def manhole_generation(iteration_index,water=False):
+    print("Starting Manhole_Input_File_Generation...")
+
+    ##write parameters on file
+    generate_model_environment_setting()
+
+    generate_material_soil()
+    generate_material_asphalt()
+    if water == True:
+        generate_material_water()
+    textfile.write("\n")
+
+    generate_waveform_setting()
+
+    generate_asphalt_box()
+    generate_soil_box()
+
+    generate_manhole(water)
+
+    generate_geometry_view(iteration_index)
+
+    textfile.close()
+# ================================================================
+
 def subsoil_generation(iteration_index):
     print("Starting Subsoil_Input_File_Generation...")
 
@@ -764,7 +814,7 @@ def auto_generation(underground_object_type,iteration_index):
     if underground_object_type=="cavity":
         cavity_generation(iteration_index,water=True)
     elif underground_object_type=="manhole":
-        print("manhole")
+        manhole_generation(iteration_index,water=True)
     elif underground_object_type=="pothole":
         print("pothole")
     elif underground_object_type=="pipe":

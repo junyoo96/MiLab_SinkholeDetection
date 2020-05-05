@@ -1,5 +1,5 @@
 from Utility import Utility
-from sympy import Symbol, solve
+#from sympy import Symbol, solve
 from Cylinder import Cylinder
 
 class Pipe(Utility):
@@ -9,10 +9,10 @@ class Pipe(Utility):
         self.pipe_pass_point_y_range_offset = 0.02
         self.pipe_pass_point_x_range_offset = 0.02
         self.pipe_thickness = 0.2
-        self.water=water
         self.pipe_content_thickness = 0.1
         self.pipe_content_material_identifier = pipe_content_material_identifier
         self.pipe_content_dielectric_smoothing_activation = pipe_content_dielectric_smoothing_activation
+        self.water = water
 
     def generate_pipe_with_cylinder(self,domain_x,domain_y,domain_z,antenna_y_offset,textfile):
         utility=Utility()

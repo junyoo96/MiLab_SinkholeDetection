@@ -1,9 +1,13 @@
 #!/bin/bash
 
+#Measure execution time
+StartTime=$(date +%s)
+
 ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files
 INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/Auto_Generation_Modules/InputFile_Auto_Generation_Modules/main.py
 INPUT_FILES_PATH=$ABSOLUTE_PATH/Input_Files
 MERGED_OUT_FILES_PATH=$ABSOLUTE_PATH/Merged_Out_Files
+LOG_FILES_PATH=$ABSOLUTE_PATH/Log_Files
 WORKTABLE_PATH=$ABSOLUTE_PATH/Worktable
 
 underground_object_type_to_generate=$1
@@ -47,4 +51,14 @@ do
     mv  $WORKTABLE_PATH/*.out $MERGED_OUT_FILES_PATH
     
 done
+
+#Measure execution time
+FinishTime=$(date +%s)
+ExecutionTime=$(($((FinishTime-StartTime))/60))
+echo "Generated underground object : $underground_object_type_to_generate\nGenerated number : $numbers_to_generate\nExecution Time : $ExecutionTime minutes"  > ../Worktable/execution_info.txt
+mv  $WORKTABLE_PATH/*.txt $LOG_FILES_PATH
+
+#copy main file
+cp -r InputFile_Auto_Generation_Modules/ ../Log_Files/
+
     

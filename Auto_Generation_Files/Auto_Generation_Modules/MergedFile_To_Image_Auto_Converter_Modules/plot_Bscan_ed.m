@@ -50,19 +50,19 @@ if filename ~= 0
     t_window_ns = round(time(end)*1e9);
     x = linspace(1, size(field, 2), size(field, 2));   
 
-    % ��ó�� 1�ܰ� : Background removal
-    t_1arr_ns = 5.5;
-    k_ma = 11;
+    % 1. Background removal    
+    t_1arr_ns = 5.5; % set ns range for background removal
+    k_ma = 11; %?
     field_proc = rmbg(field, time, t_1arr_ns, k_ma);
     ndx_proc = ndx_proc + 1;
     field_hist(:, :, ndx_proc) = field_proc;   
 
-    % ��ó�� 2�ܰ� : AGC Gain
+    % 2. AGC Gain
     field_proc_ag = gainagc(field_proc, dt, time(end));
     ndx_proc = ndx_proc + 1;
     field_hist(:, :, ndx_proc) = field_proc_ag;
 
-    % ��ó�� 3�ܰ� : Exponential Gain
+    % 3. Exponential Gain
     A = 2e8;
     B = 1.4e8;
     t1_ns = 5;

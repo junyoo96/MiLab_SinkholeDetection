@@ -52,13 +52,13 @@ do
     
 done
 
-#Measure execution time
-FinishTime=$(date +%s)
-ExecutionTime=$(($((FinishTime-StartTime))/60))
-echo "Generated underground object : $underground_object_type_to_generate\nGenerated number : $numbers_to_generate\nExecution Time : $ExecutionTime minutes"  > ../Worktable/execution_info.txt
-mv  $WORKTABLE_PATH/*.txt $LOG_FILES_PATH
+# #Measure execution time
+# FinishTime=$(date +%s)
+# ExecutionTime=$(($((FinishTime-StartTime))/60))
+# echo "Generated underground object : $underground_object_type_to_generate\nGenerated number : $numbers_to_generate\nExecution Time : $ExecutionTime minutes"  > ../Worktable/execution_info.txt
+# mv  $WORKTABLE_PATH/*.txt $LOG_FILES_PATH
 
-#copy main file
-cp -r InputFile_Auto_Generation_Modules/ ../Log_Files/
+# #copy main file
+# cp -r InputFile_Auto_Generation_Modules/ ../Log_Files/
 
     

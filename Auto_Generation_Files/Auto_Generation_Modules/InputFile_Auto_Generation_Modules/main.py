@@ -81,8 +81,10 @@ MATERIAL_SOIL_IDENTIFIER = "soil"
 # ================================================================
 ##material
 # asphalt
+#jun-start
 MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 4
-MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 7
+MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 4
+#jun-start
 
 MATERIAL_ASPHALT_CONDUCTIVITY_MIN = 0.02
 MATERIAL_ASPHALT_CONDUCTIVITY_MAX = 0.02
@@ -149,8 +151,10 @@ WAVEFORM_MAX_AMPLITUDE_MAX = 1
 # WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
 # WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
+#jun-start
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.8
 WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
+#jun-end
 
 WAVEFORM_IDENTIFIER = "my_pulse"
 
@@ -474,10 +478,18 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
 
     MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.01 #1
 
-    cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
-    cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
-    cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
-    cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
+    # cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
+    # cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
+    # cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
+    # cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
+    #jun-start
+    cavity_lower_x_determined=0.3
+    cavity_lower_y_determined=0.25
+    cavity_radius_determined =0.05
+    cavity_lower_z_determined = 0.5
+    water_portion=0.6
+    #jun-start
+    
 
     to_generate_cylinder_num=int(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS)*2-1
 

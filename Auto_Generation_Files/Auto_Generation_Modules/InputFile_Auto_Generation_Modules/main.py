@@ -484,7 +484,7 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
     # cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
     #jun-start
     cavity_lower_x_determined=0.3
-    cavity_lower_y_determined=0.25
+    cavity_lower_y_determined=0.35
     cavity_radius_determined =0.05
     cavity_lower_z_determined = 0.5
     water_portion=0.6

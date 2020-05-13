@@ -53,9 +53,7 @@ DX_DY_DZ_Z = 0.002
 
 # ================================================================
 # time window
-#TIME_WINDOW = "15e-9"
-#jun-start
-TIME_WINDOW = "30e-9"
+TIME_WINDOW = "15e-9"
 
 # ================================================================
 ##material
@@ -152,10 +150,9 @@ WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
 # WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
 # WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
-
 #jun-start
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.8
-WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
+WAVEFORM_CENTER_FREQUENCY_MAX = 0.2
 #jun-end
 
 WAVEFORM_IDENTIFIER = "my_pulse"

@@ -16,7 +16,6 @@ from Waveform import Waveform
 from Pipe import Pipe
 from Manhole import Manhole
 
-
 import sys
 import os.path
 import math

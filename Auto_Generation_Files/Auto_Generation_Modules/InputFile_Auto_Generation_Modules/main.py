@@ -147,12 +147,9 @@ WAVEFORM_TYPE = "ricker"
 WAVEFORM_MAX_AMPLITUDE_MIN = 1
 WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
-# WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
-# WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
-#jun-start
 WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
-WAVEFORM_CENTER_FREQUENCY_MAX = 0.2
-#jun-end
+WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
+
 
 WAVEFORM_IDENTIFIER = "my_pulse"
 
@@ -268,6 +265,8 @@ CAVITY_WATER_PORTION_MIN=0.0
 CAVITY_WATER_PORTION_MAX=1.0
 
 
+#Determined waveform center frequency(save to write waveform freqeuncy file)
+DETERMINED_WAVERFORM_CENTER_FREQUENCY=0
 
 # ================================================================
 # geometry_view(모델의 기하학적인 정보를 file형태로 출력하게 하는 명령어)
@@ -366,12 +365,17 @@ def generate_material_concrete():
 
 def generate_waveform():
 
+    global DETERMINED_WAVERFORM_CENTER_FREQUENCY
+    DETERMINED_WAVERFORM_CENTER_FREQUENCY=utility.random_sampling(WAVEFORM_CENTER_FREQUENCY_MIN, WAVEFORM_CENTER_FREQUENCY_MAX)
+    
+
     waveform=Waveform(
         WAVEFORM_TYPE,
         utility.random_sampling(WAVEFORM_MAX_AMPLITUDE_MIN, WAVEFORM_MAX_AMPLITUDE_MAX),
-        utility.random_sampling(WAVEFORM_CENTER_FREQUENCY_MIN, WAVEFORM_CENTER_FREQUENCY_MAX),
+        DETERMINED_WAVERFORM_CENTER_FREQUENCY,
         WAVEFORM_IDENTIFIER
     )
+    
 
     waveform.write_textfile(textfile)
 
@@ -722,6 +726,8 @@ def cavity_generation(iteration_index, water=False):
 
     generate_waveform_setting()
 
+    
+
     generate_asphalt_box()
     generate_soil_box()
     if water == True:
@@ -802,6 +808,15 @@ def subsoil_generation(iteration_index):
 
     textfile.close()
 
+def generate_waveform_info_file():
+
+    #waveform_info_file_path
+    waveform_info_file_path=os.path.dirname(__file__)+"/../../Worktable/waveform_info.txt"
+    wave_info_file=open(waveform_info_file_path,'w')
+    splited_waveform_center_frequency=str(DETERMINED_WAVERFORM_CENTER_FREQUENCY).split('.')    
+    wave_info_file.write(splited_waveform_center_frequency[0]+"\n")    
+    wave_info_file.write(splited_waveform_center_frequency[1]+"\n")
+
 # ================================================================
 
 def auto_generation(underground_object_type,iteration_index):
@@ -834,6 +849,10 @@ def auto_generation(underground_object_type,iteration_index):
     else:
         print("wrong underground_object_type")
         sys.exit()
+    
+    
+    #generate waveform info file for image processing
+    generate_waveform_info_file()
 
     print("Generation Done")
 

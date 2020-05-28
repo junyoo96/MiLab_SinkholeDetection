@@ -63,13 +63,19 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
         %t_1arr_ns = 5.5; % set ns range for background removal
         t_1arr_ns=0;
         if input_center_frequency<0.3
-             t_1arr_ns=10.7
+             t_1arr_ns=23.91
         elseif input_center_frequency<0.4
-            t_1arr_ns=7.3
+            t_1arr_ns=21.2
         elseif input_center_frequency<0.5
-            t_1arr_ns=6.4
-        elseif input_center_frequency>=0.5
-            t_1arr_ns=5.5
+            t_1arr_ns=19.69
+        elseif input_center_frequency<0.6
+            t_1arr_ns=18.54
+        elseif input_center_frequency<0.7
+            t_1arr_ns=17.61
+        elseif input_center_frequency<0.8
+            t_1arr_ns=16.74
+        elseif input_center_frequency>=0.8
+            t_1arr_ns=15.97
         end
         
         k_ma = 4; % at least under trace number(10) , 3~4 would be good

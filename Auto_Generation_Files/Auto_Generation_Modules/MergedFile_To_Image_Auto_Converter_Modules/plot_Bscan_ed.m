@@ -84,7 +84,7 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
 
         % 3. Exponential Gain
         %A = 2e8;
-        A = 10e8;
+        A = 20e8;
         B = 1.4e8;
         t1_ns = 5;
         [field_proc_eg, G] = gainexp(A, B, t1_ns, time, field_proc);

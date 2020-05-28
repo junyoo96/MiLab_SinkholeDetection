@@ -25,7 +25,7 @@ trace_number=10
 
 for underground_object_index in $(seq 1 $numbers_to_generate);
 do
-    #generate inputfile
+    # #generate inputfile
     #python $INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH $underground_object_type_to_generate $underground_object_index
 
     #run gprmax with inputfile    
@@ -70,7 +70,7 @@ do
     mv  $WORKTABLE_PATH/*.out $MERGED_OUT_FILES_PATH
     find $WORKTABLE_PATH/ -type f -name "*.txt" -delete
 
-    #remove vti files(now not used)    
+    #remove vti files(not used now)    
     # find $WORKTABLE_PATH/ -type f -name "*.vti" -delete
     # find $WORKTABLE_PATH/ -type f -name "*.out" -delete
     # find $WORKTABLE_PATH/ -type f -name "*.in" -delete

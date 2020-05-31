@@ -15,6 +15,6 @@
 
 #box: 0 0 0.8 0.6 0.6 1 asphalt n
 #box: 0 0 0 0.6 0.6 0.8 soil n
-#sphere: 0.3 0.38 0.15 0.05 free_space y
+#sphere: 0.3 0.42 0.15 0.05 free_space y
 
 #geometry_view: 0 0 0 0.6 0.6 1.1 0.002 0.002 0.002 cavity_1_ n

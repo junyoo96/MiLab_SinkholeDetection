@@ -21,7 +21,7 @@ underground_object_type_to_generate=$(echo "$underground_object_type_to_generate
 echo ${underground_object_type_to_generate}
 
 #gprmax b-scan trace number : 10 
-trace_number=30
+trace_number=10
 
 for underground_object_index in $(seq 1 $numbers_to_generate);
 do

@@ -52,7 +52,7 @@ DX_DY_DZ_Z = 0.002
 
 # ================================================================
 # time window
-TIME_WINDOW = "40e-9"
+TIME_WINDOW = "30e-9"
 
 # ================================================================
 ##material
@@ -246,8 +246,11 @@ SPHERE_X_MIN = DOMAIN_X / 2 - SPHERE_MOVING_OFFSET
 SPHERE_X_MAX = DOMAIN_X / 2 + SPHERE_MOVING_OFFSET
 SPHERE_Y_MIN = DOMAIN_Y / 2 - SPHERE_MOVING_OFFSET
 SPHERE_Y_MAX = DOMAIN_Y / 2 + SPHERE_MOVING_OFFSET
-SPHERE_Z_MIN = round(BOX_HIGHER_RIGHT_Z / 2 - SPHERE_MOVING_OFFSET,3)
-SPHERE_Z_MAX = round(BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET,3)
+# SPHERE_Z_MIN = round(BOX_HIGHER_RIGHT_Z / 2 - SPHERE_MOVING_OFFSET,3)
+# SPHERE_Z_MAX = round(BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET,3)
+#0.2(because of background removal time)
+SPHERE_Z_MIN = round(0.2 - SPHERE_MOVING_OFFSET,3)
+SPHERE_Z_MAX = round(0.2 + SPHERE_MOVING_OFFSET,3)
 
 # sphere radius
 SPHERE_RADIUS_MIN = 0.1
@@ -261,9 +264,8 @@ SPHERE_MATERIAL = "free_space"
 SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION = "y"
 
 #cavity water portion
-CAVITY_WATER_PORTION_MIN=0.0
-CAVITY_WATER_PORTION_MAX=1.0
-
+CAVITY_WATER_PORTION_MIN=0.01
+CAVITY_WATER_PORTION_MAX=0.30
 
 #Determined waveform center frequency(save to write waveform freqeuncy file)
 DETERMINED_WAVERFORM_CENTER_FREQUENCY=0
@@ -480,19 +482,19 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
 
     MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.01 #1
 
-    # cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
-    # cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
-    # cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
-    # cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
+    cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
+    cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
+    cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
+    cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
+    water_portion=utility.random_sampling(CAVITY_WATER_PORTION_MIN,CAVITY_WATER_PORTION_MAX)
     #jun-start
-    cavity_lower_x_determined=0.3
-    cavity_lower_y_determined=0.3
-    cavity_radius_determined =0.05
-    cavity_lower_z_determined = 0.2
-    water_portion=0.6
+    # cavity_lower_x_determined=0.3
+    # cavity_lower_y_determined=0.3
+    # cavity_radius_determined =0.05
+    # cavity_lower_z_determined = 0.2
+    #water_portion=0.6
     #jun-start
     
-
     to_generate_cylinder_num=int(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS)*2-1
 
     height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num

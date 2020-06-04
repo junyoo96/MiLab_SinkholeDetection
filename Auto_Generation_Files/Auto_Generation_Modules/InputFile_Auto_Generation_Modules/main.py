@@ -80,10 +80,10 @@ MATERIAL_SOIL_IDENTIFIER = "soil"
 # ================================================================
 ##material
 # asphalt
-#jun-start
+
 MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 4
-MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 4
-#jun-start
+MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 7
+
 
 MATERIAL_ASPHALT_CONDUCTIVITY_MIN = 0.02
 MATERIAL_ASPHALT_CONDUCTIVITY_MAX = 0.02
@@ -159,7 +159,7 @@ WAVEFORM_IDENTIFIER = "my_pulse"
 #jun modify
 ANTENNA_HEIGHT_OFFSET = 0.02  # 2cm
 # PML에 안테나가 붙어었으면 안되서 좀 떨어뜨리기 위한 offset
-ANTENNA_Y_OFFSET = 0.25
+ANTENNA_Y_OFFSET = 0.15
 
 HERTZIAN_DIPOLE_SOURCE_POLARISATION = "x"
 HERTZIAN_DIPOLE_SOURCE_X = DOMAIN_X / 2
@@ -183,7 +183,7 @@ SRC_STEPS_Z = 0
 SOURCE_RECEIVER_BETWEEN_OFFSET = 0.05
 
 RX_X = HERTZIAN_DIPOLE_SOURCE_X
-RX_Y = HERTZIAN_DIPOLE_SOURCE_Y + SOURCE_RECEIVER_BETWEEN_OFFSET
+RX_Y = round(HERTZIAN_DIPOLE_SOURCE_Y + SOURCE_RECEIVER_BETWEEN_OFFSET,2)
 RX_Z = HERTZIAN_DIPOLE_SOURCE_Z
 
 # 예외처리
@@ -249,13 +249,13 @@ SPHERE_Y_MAX = DOMAIN_Y / 2 + SPHERE_MOVING_OFFSET
 # SPHERE_Z_MIN = round(BOX_HIGHER_RIGHT_Z / 2 - SPHERE_MOVING_OFFSET,3)
 # SPHERE_Z_MAX = round(BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET,3)
 #0.2(because of background removal time)
-SPHERE_Z_MIN = round(0.2 - SPHERE_MOVING_OFFSET,3)
-SPHERE_Z_MAX = round(0.2 + SPHERE_MOVING_OFFSET,3)
+SPHERE_Z_MIN = round(DOMAIN_Z_UNDERGROUND_START/2+0.2,3)
+SPHERE_Z_MAX = round(DOMAIN_Z_UNDERGROUND_START/2-0.2,3)
 
 # sphere radius
-SPHERE_RADIUS_MIN = 0.1
-# 수정해야함
-SPHERE_RADIUS_MAX = 0.25
+SPHERE_RADIUS_MIN = 0.05
+#jun-modify
+SPHERE_RADIUS_MAX = 0.20
 
 # sphere material
 SPHERE_MATERIAL = "free_space"
@@ -264,7 +264,8 @@ SPHERE_MATERIAL = "free_space"
 SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION = "y"
 
 #cavity water portion
-CAVITY_WATER_PORTION_MIN=0.01
+#jun-modify
+CAVITY_WATER_PORTION_MIN=0.02
 CAVITY_WATER_PORTION_MAX=0.30
 
 #Determined waveform center frequency(save to write waveform freqeuncy file)
@@ -728,8 +729,6 @@ def cavity_generation(iteration_index, water=False):
 
     generate_waveform_setting()
 
-    
-
     generate_asphalt_box()
     generate_soil_box()
     if water == True:
@@ -836,7 +835,7 @@ def auto_generation(underground_object_type,iteration_index):
     global textfile
     textfile = open(filepath, 'w')
 
-    check_parameter_range()
+    #check_parameter_range()
 
     if underground_object_type=="cavity":
         cavity_generation(iteration_index,water=True)

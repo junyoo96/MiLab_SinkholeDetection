@@ -25,10 +25,10 @@ trace_number=30
 
 for underground_object_index in $(seq 1 $numbers_to_generate);
 do
-    ##generate inputfile
-    #python $INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH $underground_object_type_to_generate $underground_object_index
+    #generate inputfile
+    python $INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH $underground_object_type_to_generate $underground_object_index
 
-    # #run gprmax with inputfile    
+    #run gprmax with inputfile    
     for entry in $WORKTABLE_PATH/*.in;
     do         
         input_file_name=$entry

@@ -175,7 +175,8 @@ HERTZIAN_DIPOLE_SOURCE_IDENTIFIER = "my_pulse"
 # src_steps must not be lower than dx_dy_dz value!!!
 
 SRC_STEPS_X = 0
-SRC_STEPS_Y = 0.01
+#jun-modify
+SRC_STEPS_Y = 0.003
 SRC_STEPS_Z = 0
 
 # 예외처리
@@ -484,7 +485,9 @@ def generate_cavity_sphere(water=False):
 #generate cavity by shape of cylinder
 def generate_cavity_cylinder(water=False, water_portion=0.5):
 
-    MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.01 #1
+    #jun-modify
+    #MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.01 
+    MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.02
 
     cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
     cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)

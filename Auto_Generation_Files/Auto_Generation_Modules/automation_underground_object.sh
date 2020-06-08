@@ -25,8 +25,8 @@ trace_number=30
 
 for underground_object_index in $(seq 1 $numbers_to_generate);
 do
-    # #generate inputfile
-    python $INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH $underground_object_type_to_generate $underground_object_index
+    ##generate inputfile
+    #python $INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH $underground_object_type_to_generate $underground_object_index
 
     # #run gprmax with inputfile    
     for entry in $WORKTABLE_PATH/*.in;
@@ -77,13 +77,13 @@ do
     
 done
 
-# #Measure execution time
-FinishTime=$(date +%s)
-ExecutionTime=$(($((FinishTime-StartTime))/60))
-echo "Generated underground object : $underground_object_type_to_generate\nGenerated number : $numbers_to_generate\nExecution Time : $ExecutionTime minutes"  > ../Worktable/execution_info.txt
-mv  $WORKTABLE_PATH/*.txt $LOG_FILES_PATH
+# # #Measure execution time
+# FinishTime=$(date +%s)
+# ExecutionTime=$(($((FinishTime-StartTime))/60))
+# echo "Generated underground object : $underground_object_type_to_generate\nGenerated number : $numbers_to_generate\nExecution Time : $ExecutionTime minutes"  > ../Worktable/execution_info.txt
+# mv  $WORKTABLE_PATH/*.txt $LOG_FILES_PATH
 
-#copy main file
-cp -r InputFile_Auto_Generation_Modules/ ../Log_Files/
+# #copy main file
+# cp -r InputFile_Auto_Generation_Modules/ ../Log_Files/
 
     

@@ -40,8 +40,9 @@ DOMAIN_Z_UNDERGROUND_START = 1
 # 안테나 띄울 공간 얼마나 확보할지
 DOMAIN_Z_FREESPACE_OFFSET = 0.1
 
-DOMAIN_X = 0.6
-DOMAIN_Y = 0.6
+#jun-modify
+DOMAIN_X = 0.3
+DOMAIN_Y = 0.3
 DOMAIN_Z = DOMAIN_Z_UNDERGROUND_START + DOMAIN_Z_FREESPACE_OFFSET  # 1m + 0.1m(지표면에서 안테나 살짝 띄울공간 확보)
 
 # ================================================================
@@ -147,8 +148,8 @@ WAVEFORM_TYPE = "ricker"
 WAVEFORM_MAX_AMPLITUDE_MIN = 1
 WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
-#jun-start
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
+#jun-modify
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.8
 WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
 WAVEFORM_IDENTIFIER = "my_pulse"
@@ -159,7 +160,7 @@ WAVEFORM_IDENTIFIER = "my_pulse"
 #jun modify
 ANTENNA_HEIGHT_OFFSET = 0.02  # 2cm
 # PML에 안테나가 붙어었으면 안되서 좀 떨어뜨리기 위한 offset
-ANTENNA_Y_OFFSET = 0.15
+ANTENNA_Y_OFFSET = 0.1
 
 HERTZIAN_DIPOLE_SOURCE_POLARISATION = "x"
 HERTZIAN_DIPOLE_SOURCE_X = DOMAIN_X / 2
@@ -239,22 +240,24 @@ BOX_DIELECTRIC_SMOOTHING_ACTIVATION = "n"
 # ================================================================
 ##cavity information
 
-SPHERE_MOVING_OFFSET = 0.05
+#jun-modify
+SPHERE_MOVING_OFFSET_X = 0.05
+SPHERE_MOVING_OFFSET_Y = 0.15
+SPHERE_MOVING_OFFSET_Z = 0.2
 
 # sphere coordinate
-SPHERE_X_MIN = DOMAIN_X / 2 - SPHERE_MOVING_OFFSET
-SPHERE_X_MAX = DOMAIN_X / 2 + SPHERE_MOVING_OFFSET
-SPHERE_Y_MIN = DOMAIN_Y / 2 - SPHERE_MOVING_OFFSET
-SPHERE_Y_MAX = DOMAIN_Y / 2 + SPHERE_MOVING_OFFSET
-# SPHERE_Z_MIN = round(BOX_HIGHER_RIGHT_Z / 2 - SPHERE_MOVING_OFFSET,3)
-# SPHERE_Z_MAX = round(BOX_HIGHER_RIGHT_Z / 2 + SPHERE_MOVING_OFFSET,3)
+SPHERE_X_MIN = round(DOMAIN_X / 2 - SPHERE_MOVING_OFFSET_X,2)
+SPHERE_X_MAX = round(DOMAIN_X / 2 + SPHERE_MOVING_OFFSET_X,2)
+SPHERE_Y_MIN = round(DOMAIN_Y / 2 - SPHERE_MOVING_OFFSET_Y,2)
+SPHERE_Y_MAX = round(DOMAIN_Y / 2 + SPHERE_MOVING_OFFSET_Y,2)
 #0.2(because of background removal time)
-SPHERE_Z_MIN = round(DOMAIN_Z_UNDERGROUND_START/2+0.2,3)
-SPHERE_Z_MAX = round(DOMAIN_Z_UNDERGROUND_START/2-0.2,3)
-
-# sphere radius
-SPHERE_RADIUS_MIN = 0.05
+SPHERE_Z_MIN = round(DOMAIN_Z_UNDERGROUND_START/2+SPHERE_MOVING_OFFSET_Z,3)
 #jun-modify
+SPHERE_Z_MAX = round(DOMAIN_Z_UNDERGROUND_START/2,3)
+
+# sphere radius(5cm~20cm)
+SPHERE_RADIUS_MIN = 0.05
+
 SPHERE_RADIUS_MAX = 0.20
 
 # sphere material
@@ -265,7 +268,7 @@ SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION = "y"
 
 #cavity water portion
 #jun-modify
-CAVITY_WATER_PORTION_MIN=0.02
+CAVITY_WATER_PORTION_MIN=0.01
 CAVITY_WATER_PORTION_MAX=0.30
 
 #Determined waveform center frequency(save to write waveform freqeuncy file)
@@ -487,14 +490,13 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
     cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
     cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
     cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
-    water_portion=utility.random_sampling(CAVITY_WATER_PORTION_MIN,CAVITY_WATER_PORTION_MAX)
-    #jun-start
+
+    #jun-modify
     # cavity_lower_x_determined=0.3
     # cavity_lower_y_determined=0.3
     # cavity_radius_determined =0.05
     # cavity_lower_z_determined = 0.2
-    #water_portion=0.6
-    #jun-start
+    #water_portion=
     
     to_generate_cylinder_num=int(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS)*2-1
 

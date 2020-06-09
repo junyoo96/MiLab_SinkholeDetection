@@ -19,6 +19,7 @@ from Manhole import Manhole
 import sys
 import os.path
 import math
+from math import gcd
 # Underground Object Generation File
 
 UNDERGROUND_OBJECT_TYPE = None
@@ -149,7 +150,8 @@ WAVEFORM_MAX_AMPLITUDE_MIN = 1
 WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
 #jun-modify
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.8
+# WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.6
 WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
 WAVEFORM_IDENTIFIER = "my_pulse"
@@ -176,6 +178,7 @@ HERTZIAN_DIPOLE_SOURCE_IDENTIFIER = "my_pulse"
 
 SRC_STEPS_X = 0
 #jun-modify
+#SRC_STEPS_Y = 0.01
 SRC_STEPS_Y = 0.003
 SRC_STEPS_Z = 0
 
@@ -256,10 +259,10 @@ SPHERE_Z_MIN = round(DOMAIN_Z_UNDERGROUND_START/2+SPHERE_MOVING_OFFSET_Z,3)
 #jun-modify
 SPHERE_Z_MAX = round(DOMAIN_Z_UNDERGROUND_START/2,3)
 
-# sphere radius(5cm~20cm)
-SPHERE_RADIUS_MIN = 0.05
+# sphere radius(10cm~20cm)
+SPHERE_RADIUS_MIN = 0.10
 
-SPHERE_RADIUS_MAX = 0.20
+SPHERE_RADIUS_MAX = 0.25
 
 # sphere material
 SPHERE_MATERIAL = "free_space"
@@ -483,7 +486,7 @@ def generate_cavity_sphere(water=False):
     cavity_sphere.write_textfile(textfile)
 
 #generate cavity by shape of cylinder
-def generate_cavity_cylinder(water=False, water_portion=0.5):
+def generate_cavity_cylinder(water=False, water_portion=0):
 
     #jun-modify
     #MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.01 
@@ -501,13 +504,25 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
     # cavity_lower_z_determined = 0.2
     #water_portion=
     
-    to_generate_cylinder_num=int(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS)*2-1
+    #
+    #to_generate_cylinder_num=int(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS)*2-1
 
+    water_portion=int(water_portion*100)
+
+    to_generate_cylinder_num=100
+    to_genearte_cylinder_with_water_portion_num=0
+
+    calculated_gcd=gcd(to_generate_cylinder_num,water_portion)
+    # to_generate_cylinder_num=int(to_generate_cylinder_num/calculated_gcd)
+    to_generate_cylinder_num=100
+    #to_genearte_cylinder_with_water_portion_num=int(water_portion/calculated_gcd)
+    to_genearte_cylinder_with_water_portion_num=water_portion
+    
+    radius_per_cylinder=(cavity_radius_determined-MINIMUM_CAVITY_CYLINDER_END_RADIUS)/50
     height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num
 
-    to_genearte_cylinder_with_water_portion_num=int(to_generate_cylinder_num*water_portion)
-    if to_genearte_cylinder_with_water_portion_num!=0:
-        to_genearte_cylinder_with_water_portion_num+=1
+    # if to_genearte_cylinder_with_water_portion_num!=0:
+    #     to_genearte_cylinder_with_water_portion_num+=1
     
     current_cylinder_lower_x=cavity_lower_x_determined
     current_cylinder_lower_y= cavity_lower_y_determined
@@ -529,23 +544,27 @@ def generate_cavity_cylinder(water=False, water_portion=0.5):
         cavity_cylinder=Cylinder(
             current_cylinder_lower_x,
             current_cylinder_lower_y,
-            round(current_cylinder_lower_z,2),
+            round(current_cylinder_lower_z,3),
             current_cylinder_lower_x,
             current_cylinder_lower_y,
-            round(current_cylinder_lower_z+height_per_cylinder,2),
-            round(current_cylinder_radius,2),
+            round(current_cylinder_lower_z+height_per_cylinder,3),
+            round(current_cylinder_radius,3),
             current_material_identifier,
             current_dielectric_smoothing_activation
         )
 
         cavity_cylinder.write_textfile(textfile)
 
-        current_cylinder_lower_z +=height_per_cylinder
+        current_cylinder_lower_z+=height_per_cylinder
 
         if i<to_generate_cylinder_num/2:
-            current_cylinder_radius+=MINIMUM_CAVITY_CYLINDER_END_RADIUS
+            current_cylinder_radius+=radius_per_cylinder
         else:
-            current_cylinder_radius -= MINIMUM_CAVITY_CYLINDER_END_RADIUS
+            tmp=current_cylinder_radius
+            current_cylinder_radius -= radius_per_cylinder
+            if current_cylinder_radius<MINIMUM_CAVITY_CYLINDER_END_RADIUS:
+                current_cylinder_radius=MINIMUM_CAVITY_CYLINDER_END_RADIUS
+
 
 def generate_pipe(water=False):
     pipe=None

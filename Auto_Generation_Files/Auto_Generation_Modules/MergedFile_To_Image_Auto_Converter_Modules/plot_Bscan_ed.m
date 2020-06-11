@@ -59,43 +59,43 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
         t_window_ns = round(time(end)*1e9);
         x = linspace(1, size(field, 2), size(field, 2));   
 
-        % 1. Background removal    
-        %t_1arr_ns = 5.5; % set ns range for background removal
-        %t_1arr_ns=0;
-        %if input_center_frequency<0.3
-        %     t_1arr_ns=23.91
-        %elseif input_center_frequency<0.4
-        %    t_1arr_ns=21.2
-        %elseif input_center_frequency<0.5
-        %    t_1arr_ns=19.69
-        %elseif input_center_frequency<0.6
-        %    t_1arr_ns=18.54
-        %elseif input_center_frequency<0.7
-        %    t_1arr_ns=17.61
-        %elseif input_center_frequency<0.8
-        %    t_1arr_ns=16.74
-        %elseif input_center_frequency>=0.8
-        %    t_1arr_ns=15.97
-        %end
-
-        t_1arr_ns=6.5
-        
-        k_ma = 15; % at least under trace number(10) , 3~4 would be good
-        field_proc = rmbg(field, time, t_1arr_ns, k_ma);
-        ndx_proc = ndx_proc + 1;
-        field_hist(:, :, ndx_proc) = field_proc;   
-
-        % 2. AGC Gain
-        field_proc_ag = gainagc(field_proc, dt, time(end));
-        ndx_proc = ndx_proc + 1;
-        field_hist(:, :, ndx_proc) = field_proc_ag;
+%         % 1. Background removal    
+%         %t_1arr_ns = 5.5; % set ns range for background removal
+%         %t_1arr_ns=0;
+%         %if input_center_frequency<0.3
+%         %     t_1arr_ns=23.91
+%         %elseif input_center_frequency<0.4
+%         %    t_1arr_ns=21.2
+%         %elseif input_center_frequency<0.5
+%         %    t_1arr_ns=19.69
+%         %elseif input_center_frequency<0.6
+%         %    t_1arr_ns=18.54
+%         %elseif input_center_frequency<0.7
+%         %    t_1arr_ns=17.61
+%         %elseif input_center_frequency<0.8
+%         %    t_1arr_ns=16.74
+%         %elseif input_center_frequency>=0.8
+%         %    t_1arr_ns=15.97
+%         %end
+% 
+%         t_1arr_ns=6.5
+%         
+%         k_ma = 15; % at least under trace number(10) , 3~4 would be good
+%         field_proc = rmbg(field, time, t_1arr_ns, k_ma);
+%         ndx_proc = ndx_proc + 1;
+%         field_hist(:, :, ndx_proc) = field_proc;   
+% 
+%         % 2. AGC Gain
+%         field_proc_ag = gainagc(field_proc, dt, time(end));
+%         ndx_proc = ndx_proc + 1;
+%         field_hist(:, :, ndx_proc) = field_proc_ag;
 
         % 3. Exponential Gain
         %A = 2e8;
-        A = 50e8;
-        B = 3.4e8;
-        t1_ns = 5;
-        [field_proc_eg, G] = gainexp(A, B, t1_ns, time, field_proc);
+        A = 5e8;
+        B = 5.4e8;
+        t1_ns = 6.5;
+        [field_proc_eg, G] = gainexp(A, B, t1_ns, time, field);
         ndx_proc = ndx_proc + 1;
         field_hist(:, :, ndx_proc) = field_proc_eg;
 

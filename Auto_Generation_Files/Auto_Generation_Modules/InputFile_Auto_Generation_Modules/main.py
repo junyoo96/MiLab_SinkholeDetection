@@ -42,8 +42,10 @@ DOMAIN_Z_UNDERGROUND_START = 1
 DOMAIN_Z_FREESPACE_OFFSET = 0.1
 
 #jun-modify
-DOMAIN_X = 0.2
-DOMAIN_Y = 0.8
+# DOMAIN_X = 0.2
+# DOMAIN_Y = 0.8
+DOMAIN_X = 0.15
+DOMAIN_Y = 0.9
 DOMAIN_Z = DOMAIN_Z_UNDERGROUND_START + DOMAIN_Z_FREESPACE_OFFSET  # 1m + 0.1m(지표면에서 안테나 살짝 띄울공간 확보)
 
 # ================================================================
@@ -177,8 +179,6 @@ HERTZIAN_DIPOLE_SOURCE_IDENTIFIER = "my_pulse"
 # src_steps must not be lower than dx_dy_dz value!!!
 
 SRC_STEPS_X = 0
-#jun-modify
-#SRC_STEPS_Y = 0.01
 SRC_STEPS_Y = 0.02
 SRC_STEPS_Z = 0
 
@@ -244,10 +244,12 @@ BOX_DIELECTRIC_SMOOTHING_ACTIVATION = "n"
 # ================================================================
 ##cavity information
 
-#jun-modify
 SPHERE_MOVING_OFFSET_X = 0.05
+#jun-modify 0.4
 SPHERE_MOVING_OFFSET_Y = 0.15
-SPHERE_MOVING_OFFSET_Z = 0.2
+SPHERE_MOVING_OFFSET_Z= 0.38
+SPHERE_MOVING_OFFSET_Z_TOP = 0.38
+SPHERE_MOVING_OFFSET_Z_BOTTOM = 0.19
 
 # sphere coordinate
 SPHERE_X_MIN = round(DOMAIN_X / 2 - SPHERE_MOVING_OFFSET_X,2)
@@ -255,13 +257,18 @@ SPHERE_X_MAX = round(DOMAIN_X / 2 + SPHERE_MOVING_OFFSET_X,2)
 SPHERE_Y_MIN = round(DOMAIN_Y / 2 - SPHERE_MOVING_OFFSET_Y,2)
 SPHERE_Y_MAX = round(DOMAIN_Y / 2 + SPHERE_MOVING_OFFSET_Y,2)
 #0.2(because of background removal time)
+
+#0.21~0.78
+SPHERE_TOP_Z_MIN = round(ASPHALT_BOX_LOWER_LEFT_Z/2-SPHERE_MOVING_OFFSET_Z_BOTTOM,3)
+SPHERE_TOP_Z_MAX = round(ASPHALT_BOX_LOWER_LEFT_Z/2+SPHERE_MOVING_OFFSET_Z_TOP,3)
+
+#need to modify like sphere top z
 SPHERE_Z_MIN = round(DOMAIN_Z_UNDERGROUND_START/2-SPHERE_MOVING_OFFSET_Z,3)
 #jun-modify
 SPHERE_Z_MAX = round(DOMAIN_Z_UNDERGROUND_START/2,3)
 
 # sphere radius(10cm~20cm)
 SPHERE_RADIUS_MIN = 0.10
-
 SPHERE_RADIUS_MAX = 0.25
 
 # sphere material
@@ -474,6 +481,8 @@ def generate_cavity_sphere(water=False):
     else:
         sphere_dielectric_smoothing_activation = "n"
 
+    #determine sphere_z
+
     cavity_sphere=Sphere(
         utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX),
         utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX),
@@ -495,7 +504,10 @@ def generate_cavity_cylinder(water=False, water_portion=0):
     cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
     cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
     cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
-    cavity_lower_z_determined = utility.random_sampling(SPHERE_Z_MIN, SPHERE_Z_MAX)-cavity_radius_determined
+    cavity_z_top_determined=utility.random_sampling(SPHERE_TOP_Z_MIN, SPHERE_TOP_Z_MAX)
+    
+    cavity_z_determined=cavity_z_top_determined-cavity_radius_determined
+    cavity_lower_z_determined = cavity_z_determined-cavity_radius_determined
 
     #jun-modify
     # cavity_lower_x_determined=0.3
@@ -534,6 +546,7 @@ def generate_cavity_cylinder(water=False, water_portion=0):
 
     for i in range(1,to_generate_cylinder_num+1):
 
+        
         if i<=to_genearte_cylinder_with_water_portion_num:
             current_material_identifier = MATERIAL_WATER_IDENTIFIER
             current_dielectric_smoothing_activation=DIELECTRIC_SMOOTHING_ACTIVATION_NO
@@ -553,7 +566,8 @@ def generate_cavity_cylinder(water=False, water_portion=0):
             current_dielectric_smoothing_activation
         )
 
-        cavity_cylinder.write_textfile(textfile)
+        if round(current_cylinder_lower_z,3)>0:
+            cavity_cylinder.write_textfile(textfile)
 
         current_cylinder_lower_z+=height_per_cylinder
 
@@ -649,95 +663,94 @@ def generate_waveform_setting():
     textfile.write("\n")
 
 # ================================================================
-def check_parameter_range():
-    print("Check Parameters...")
+# def check_parameter_range():
+#     print("Check Parameters...")
 
-    wrong_parameter_list = ""
+#     wrong_parameter_list = ""
 
-    try:
-        # Material
-        if MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN > MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX:
-            wrong_parameter_list += f"MATERIAL_SOIL_RELATIVE_PERMITTIVITY: ({MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN},{MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX})\n"
-        if MATERIAL_SOIL_CONDUCTIVITY_MIN > MATERIAL_SOIL_CONDUCTIVITY_MAX:
-            wrong_parameter_list += f"MATERIAL_SOIL_CONDUCTIVITY: ({MATERIAL_SOIL_CONDUCTIVITY_MIN},{MATERIAL_SOIL_CONDUCTIVITY_MAX})\n"
-        if MATERIAL_SOIL_RELATIVE_PERMEABILITY_MIN > MATERIAL_SOIL_RELATIVE_PERMEABILITY_MAX:
-            wrong_parameter_list += f"MATERIAL_SOIL_RELATIVE_PERMEABILITY: ({MATERIAL_SOIL_RELATIVE_PERMEABILITY_MIN},{MATERIAL_SOIL_RELATIVE_PERMEABILITY_MAX})\n"
-        if MATERIAL_SOIL_MAGNETIC_LOSS_MIN > MATERIAL_SOIL_MAGNETIC_LOSS_MAX:
-            wrong_parameter_list += f"MATERIAL_SOIL_MAGNETIC_LOSS: ({MATERIAL_SOIL_MAGNETIC_LOSS_MIN},{MATERIAL_SOIL_MAGNETIC_LOSS_MAX})\n"
+#     try:
+#         # Material
+#         if MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN > MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX:
+#             wrong_parameter_list += f"MATERIAL_SOIL_RELATIVE_PERMITTIVITY: ({MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN},{MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX})\n"
+#         if MATERIAL_SOIL_CONDUCTIVITY_MIN > MATERIAL_SOIL_CONDUCTIVITY_MAX:
+#             wrong_parameter_list += f"MATERIAL_SOIL_CONDUCTIVITY: ({MATERIAL_SOIL_CONDUCTIVITY_MIN},{MATERIAL_SOIL_CONDUCTIVITY_MAX})\n"
+#         if MATERIAL_SOIL_RELATIVE_PERMEABILITY_MIN > MATERIAL_SOIL_RELATIVE_PERMEABILITY_MAX:
+#             wrong_parameter_list += f"MATERIAL_SOIL_RELATIVE_PERMEABILITY: ({MATERIAL_SOIL_RELATIVE_PERMEABILITY_MIN},{MATERIAL_SOIL_RELATIVE_PERMEABILITY_MAX})\n"
+#         if MATERIAL_SOIL_MAGNETIC_LOSS_MIN > MATERIAL_SOIL_MAGNETIC_LOSS_MAX:
+#             wrong_parameter_list += f"MATERIAL_SOIL_MAGNETIC_LOSS: ({MATERIAL_SOIL_MAGNETIC_LOSS_MIN},{MATERIAL_SOIL_MAGNETIC_LOSS_MAX})\n"
 
-        # waveform
-        if HERTZIAN_DIPOLE_SOURCE_X > DOMAIN_X:
-            wrong_parameter_list += f"HERTZIAN_DIPOLE_SOURCE_X : {HERTZIAN_DIPOLE_SOURCE_X},DOMAIN_X : {DOMAIN_X})\n"
-        if HERTZIAN_DIPOLE_SOURCE_Y > DOMAIN_Y:
-            wrong_parameter_list += f"HERTZIAN_DIPOLE_SOURCE_Y :{HERTZIAN_DIPOLE_SOURCE_Y},DOMAIN_Y : {DOMAIN_Y})\n"
-        if HERTZIAN_DIPOLE_SOURCE_X > DOMAIN_X:
-            wrong_parameter_list += f"HERTZIAN_DIPOLE_SOURCE_Z :{HERTZIAN_DIPOLE_SOURCE_Z},DOMAIN_Z : {DOMAIN_Z})\n"
+#         # waveform
+#         if HERTZIAN_DIPOLE_SOURCE_X > DOMAIN_X:
+#             wrong_parameter_list += f"HERTZIAN_DIPOLE_SOURCE_X : {HERTZIAN_DIPOLE_SOURCE_X},DOMAIN_X : {DOMAIN_X})\n"
+#         if HERTZIAN_DIPOLE_SOURCE_Y > DOMAIN_Y:
+#             wrong_parameter_list += f"HERTZIAN_DIPOLE_SOURCE_Y :{HERTZIAN_DIPOLE_SOURCE_Y},DOMAIN_Y : {DOMAIN_Y})\n"
+#         if HERTZIAN_DIPOLE_SOURCE_X > DOMAIN_X:
+#             wrong_parameter_list += f"HERTZIAN_DIPOLE_SOURCE_Z :{HERTZIAN_DIPOLE_SOURCE_Z},DOMAIN_Z : {DOMAIN_Z})\n"
 
-        # rx
-        if RX_X > DOMAIN_X:
-            wrong_parameter_list += f"RX_X:{RX_X},DOMAIN_X : {DOMAIN_X}\n"
-        if RX_Y > DOMAIN_Y:
-            wrong_parameter_list += f"RX_Y:{RX_Y},DOMAIN_Y : {DOMAIN_Y}\n"
-        if RX_Z > DOMAIN_Z:
-            wrong_parameter_list += f"RX_Z:{RX_Z},DOMAIN_Z : {DOMAIN_Z}\n"
+#         # rx
+#         if RX_X > DOMAIN_X:
+#             wrong_parameter_list += f"RX_X:{RX_X},DOMAIN_X : {DOMAIN_X}\n"
+#         if RX_Y > DOMAIN_Y:
+#             wrong_parameter_list += f"RX_Y:{RX_Y},DOMAIN_Y : {DOMAIN_Y}\n"
+#         if RX_Z > DOMAIN_Z:
+#             wrong_parameter_list += f"RX_Z:{RX_Z},DOMAIN_Z : {DOMAIN_Z}\n"
 
-        # src_steps
-        if SRC_STEPS_X > DOMAIN_X:
-            wrong_parameter_list += f"SRC_STEPS_X:{SRC_STEPS_X},DOMAIN_X : {DOMAIN_X}\n"
-        if SRC_STEPS_Y > DOMAIN_Y:
-            wrong_parameter_list += f"SRC_STEPS_Y:{SRC_STEPS_Y},DOMAIN_Y : {DOMAIN_Y}\n"
-        if SRC_STEPS_Z > DOMAIN_Z:
-            wrong_parameter_list += f":SRC_STEPS_Z:{SRC_STEPS_Z},DOMAIN_Z : {DOMAIN_Z}\n"
+#         # src_steps
+#         if SRC_STEPS_X > DOMAIN_X:
+#             wrong_parameter_list += f"SRC_STEPS_X:{SRC_STEPS_X},DOMAIN_X : {DOMAIN_X}\n"
+#         if SRC_STEPS_Y > DOMAIN_Y:
+#             wrong_parameter_list += f"SRC_STEPS_Y:{SRC_STEPS_Y},DOMAIN_Y : {DOMAIN_Y}\n"
+#         if SRC_STEPS_Z > DOMAIN_Z:
+#             wrong_parameter_list += f":SRC_STEPS_Z:{SRC_STEPS_Z},DOMAIN_Z : {DOMAIN_Z}\n"
 
-        # rx_steps
-        if RX_STEPS_X > DOMAIN_X:
-            wrong_parameter_list += f":RX_STEPS_X:{RX_STEPS_X},DOMAIN_X : {DOMAIN_X}\n"
-        if RX_STEPS_Y > DOMAIN_Y:
-            wrong_parameter_list += f":RX_STEPS_Y:{RX_STEPS_Y},DOMAIN_Y : {DOMAIN_Y}\n"
-        if RX_STEPS_Z > DOMAIN_Z:
-            wrong_parameter_list += f":RX_STEPS_Z:{RX_STEPS_Z},DOMAIN_Z : {DOMAIN_Z}\n"
+#         # rx_steps
+#         if RX_STEPS_X > DOMAIN_X:
+#             wrong_parameter_list += f":RX_STEPS_X:{RX_STEPS_X},DOMAIN_X : {DOMAIN_X}\n"
+#         if RX_STEPS_Y > DOMAIN_Y:
+#             wrong_parameter_list += f":RX_STEPS_Y:{RX_STEPS_Y},DOMAIN_Y : {DOMAIN_Y}\n"
+#         if RX_STEPS_Z > DOMAIN_Z:
+#             wrong_parameter_list += f":RX_STEPS_Z:{RX_STEPS_Z},DOMAIN_Z : {DOMAIN_Z}\n"
 
-        # box
-        if BOX_HIGHER_RIGHT_X > DOMAIN_X:
-            wrong_parameter_list += f"BOX_HIGHER_RIGHT_X : {BOX_HIGHER_RIGHT_X},DOMAIN_X : {DOMAIN_X}\n"
-        if BOX_HIGHER_RIGHT_Y > DOMAIN_Y:
-            wrong_parameter_list += f"BOX_HIGHER_RIGHT_Y : {BOX_HIGHER_RIGHT_Y},DOMAIN_X : {DOMAIN_Y}\n"
-        if BOX_HIGHER_RIGHT_Z > DOMAIN_Z:
-            wrong_parameter_list += f"BOX_HIGHER_RIGHT_Z : {BOX_HIGHER_RIGHT_Z},DOMAIN_X : {DOMAIN_Z}\n"
+#         # box
+#         if BOX_HIGHER_RIGHT_X > DOMAIN_X:
+#             wrong_parameter_list += f"BOX_HIGHER_RIGHT_X : {BOX_HIGHER_RIGHT_X},DOMAIN_X : {DOMAIN_X}\n"
+#         if BOX_HIGHER_RIGHT_Y > DOMAIN_Y:
+#             wrong_parameter_list += f"BOX_HIGHER_RIGHT_Y : {BOX_HIGHER_RIGHT_Y},DOMAIN_X : {DOMAIN_Y}\n"
+#         if BOX_HIGHER_RIGHT_Z > DOMAIN_Z:
+#             wrong_parameter_list += f"BOX_HIGHER_RIGHT_Z : {BOX_HIGHER_RIGHT_Z},DOMAIN_X : {DOMAIN_Z}\n"
 
-        ##sphere
-        # sphere coordinate
-        if SPHERE_X_MIN > SPHERE_X_MAX:
-            wrong_parameter_list += f"SPHERE_X({SPHERE_X_MIN},{SPHERE_X_MAX})\n"
-        if SPHERE_Y_MIN > SPHERE_Y_MAX:
-            wrong_parameter_list += f"SPHERE_Y({SPHERE_Y_MIN},{SPHERE_Y_MAX})\n"
-        if SPHERE_Z_MIN > SPHERE_Z_MAX:
-            wrong_parameter_list += f"SPHERE_Z({SPHERE_Z_MIN},{SPHERE_Z_MAX})\n"
+#         ##sphere
+#         # sphere coordinate
+#         if SPHERE_X_MIN > SPHERE_X_MAX:
+#             wrong_parameter_list += f"SPHERE_X({SPHERE_X_MIN},{SPHERE_X_MAX})\n"
+#         if SPHERE_Y_MIN > SPHERE_Y_MAX:
+#             wrong_parameter_list += f"SPHERE_Y({SPHERE_Y_MIN},{SPHERE_Y_MAX})\n"
+#         if SPHERE_Z_MIN > SPHERE_Z_MAX:
+#             wrong_parameter_list += f"SPHERE_Z({SPHERE_Z_MIN},{SPHERE_Z_MAX})\n"
 
-        if SPHERE_X_MIN > DOMAIN_X:
-            wrong_parameter_list += f"SPHERE_X:{SPHERE_X_MIN},DOMAIN_X:{DOMAIN_X}\n"
-        if SPHERE_Y_MIN > DOMAIN_Y:
-            wrong_parameter_list += f"SPHERE_Y:{SPHERE_Y_MIN},DOMAIN_Y:{DOMAIN_Y}\n"
-        if SPHERE_Z_MIN > DOMAIN_Z:
-            wrong_parameter_list += f"SPHERE_Z:{SPHERE_Z_MIN},DOMAIN_Z:{DOMAIN_Z}\n"
-        if SPHERE_X_MAX > DOMAIN_X:
-            wrong_parameter_list += f"SPHERE_X:{SPHERE_X_MAX},DOMAIN_X:{DOMAIN_X}\n"
-        if SPHERE_Y_MAX > DOMAIN_Y:
-            wrong_parameter_list += f"SPHERE_Y:{SPHERE_Y_MAX},DOMAIN_Y:{DOMAIN_Y}\n"
-        if SPHERE_Z_MAX > DOMAIN_Z:
-            wrong_parameter_list += f"SPHERE_Z:{SPHERE_Z_MAX},DOMAIN_Z:{DOMAIN_Z}\n"
+#         if SPHERE_X_MIN > DOMAIN_X:
+#             wrong_parameter_list += f"SPHERE_X:{SPHERE_X_MIN},DOMAIN_X:{DOMAIN_X}\n"
+#         if SPHERE_Y_MIN > DOMAIN_Y:
+#             wrong_parameter_list += f"SPHERE_Y:{SPHERE_Y_MIN},DOMAIN_Y:{DOMAIN_Y}\n"
+#         if SPHERE_Z_MIN > DOMAIN_Z:
+#             wrong_parameter_list += f"SPHERE_Z:{SPHERE_Z_MIN},DOMAIN_Z:{DOMAIN_Z}\n"
+#         if SPHERE_X_MAX > DOMAIN_X:
+#             wrong_parameter_list += f"SPHERE_X:{SPHERE_X_MAX},DOMAIN_X:{DOMAIN_X}\n"
+#         if SPHERE_Y_MAX > DOMAIN_Y:
+#             wrong_parameter_list += f"SPHERE_Y:{SPHERE_Y_MAX},DOMAIN_Y:{DOMAIN_Y}\n"
+#         if SPHERE_Z_MAX > DOMAIN_Z:
+#             wrong_parameter_list += f"SPHERE_Z:{SPHERE_Z_MAX},DOMAIN_Z:{DOMAIN_Z}\n"
 
-        if wrong_parameter_list != "":
-            raise Exception("Wrong parameter error")
+#         if wrong_parameter_list != "":
+#             raise Exception("Wrong parameter error")
 
-    except Exception as e:
-        print(e)
-        print("==========================Wrong parameter list=======================")
-        print(wrong_parameter_list)
-        print("=====================================================================")
+#     except Exception as e:
+#         print(e)
+#         print("==========================Wrong parameter list=======================")
+#         print(wrong_parameter_list)
+#         print("=====================================================================")
 
-        sys.exit()
-
+#         sys.exit()
 
 def cavity_generation(iteration_index, water=False):
     print("Starting Cavity_Input_File_Generation...")

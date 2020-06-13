@@ -80,7 +80,7 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
 % 
 %         t_1arr_ns=6.5
 %         
-%         k_ma = 15; % at least under trace number(10) , 3~4 would be good
+%         k_ma = 31; % at least under trace number
 %         field_proc = rmbg(field, time, t_1arr_ns, k_ma);
 %         ndx_proc = ndx_proc + 1;
 %         field_hist(:, :, ndx_proc) = field_proc;   

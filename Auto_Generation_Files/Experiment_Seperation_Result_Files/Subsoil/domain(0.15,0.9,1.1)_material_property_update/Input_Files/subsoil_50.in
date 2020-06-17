@@ -1,0 +1,18 @@
+#title: B-scan of a subsoil
+#domain: 0.15 0.9 1.1
+#dx_dy_dz: 0.002 0.002 0.002
+#time_window: 30e-9
+
+#material: 9.44 0.0999603 1.0 0.0 soil
+#material: 4.15 1e-12 1.0 0.0 asphalt
+
+#waveform: ricker 1.0 0.5e9 my_pulse
+#hertzian_dipole: x 0.075 0.1 1.02 my_pulse
+#rx: 0.075 0.15 1.02
+#src_steps: 0 0.02 0
+#rx_steps: 0 0.02 0
+
+#box: 0 0 0.8 0.15 0.9 1 asphalt n
+#box: 0 0 0 0.15 0.9 0.8 soil n
+
+#geometry_view: 0 0 0 0.15 0.9 1.1 0.002 0.002 0.002 subsoil_50_ n

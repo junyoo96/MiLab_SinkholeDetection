@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Box import Box
 from Domain import Domain
 from Dx_Dy_Dz import Dx_Dy_Dz
@@ -66,12 +67,12 @@ MATERIAL_FREESPACE_DIELECTRIC_SMOOTHING_ACTIVATION= "y"
 
 # ================================================================
 ##material
-# soil
-MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN = 10
-MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX = 10
+# soil(4~12)
+MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN = 4
+MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX = 12
 
-MATERIAL_SOIL_CONDUCTIVITY_MIN = 0.01
-MATERIAL_SOIL_CONDUCTIVITY_MAX = 0.01
+MATERIAL_SOIL_CONDUCTIVITY_MIN = 1e-07 # 1e-07
+MATERIAL_SOIL_CONDUCTIVITY_MAX = 0.1
 
 MATERIAL_SOIL_RELATIVE_PERMEABILITY_MIN = 1
 MATERIAL_SOIL_RELATIVE_PERMEABILITY_MAX = 1
@@ -82,15 +83,20 @@ MATERIAL_SOIL_MAGNETIC_LOSS_MAX = 0
 MATERIAL_SOIL_IDENTIFIER = "soil"
 
 # ================================================================
-##material
+# #material
 # asphalt
 
-MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 4
-MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 7
+#asphalt
+# MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 4
+# MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 7
+#jun-modify
+MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 3
+MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 5
 
-
-MATERIAL_ASPHALT_CONDUCTIVITY_MIN = 0.02
-MATERIAL_ASPHALT_CONDUCTIVITY_MAX = 0.02
+# MATERIAL_ASPHALT_CONDUCTIVITY_MIN = 0.02
+# MATERIAL_ASPHALT_CONDUCTIVITY_MAX = 0.02
+MATERIAL_ASPHALT_CONDUCTIVITY_MIN = 1e-13
+MATERIAL_ASPHALT_CONDUCTIVITY_MAX = 1e-11
 
 MATERIAL_ASPHALT_RELATIVE_PERMEABILITY_MIN = 1
 MATERIAL_ASPHALT_RELATIVE_PERMEABILITY_MAX = 1
@@ -104,11 +110,17 @@ MATERIAL_ASPHALT_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 # ================================================================
 ##material
 # water
-MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN = 80
-MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX = 80
+# MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN = 80
+# MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX = 80
+#jun-modify
+MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN = 81
+MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX = 81
 
-MATERIAL_WATER_CONDUCTIVITY_MIN = 0.05
-MATERIAL_WATER_CONDUCTIVITY_MAX = 0.05
+# MATERIAL_WATER_CONDUCTIVITY_MIN = 0.05
+# MATERIAL_WATER_CONDUCTIVITY_MAX = 0.05
+#jun-modify
+MATERIAL_WATER_CONDUCTIVITY_MIN = 1e-04
+MATERIAL_WATER_CONDUCTIVITY_MAX = 0.03
 
 MATERIAL_WATER_RELATIVE_PERMEABILITY_MIN = 1
 MATERIAL_WATER_RELATIVE_PERMEABILITY_MAX = 1
@@ -122,8 +134,11 @@ MATERIAL_WATER_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 # ================================================================
 ##material
 # concrete
-MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MIN = 6
-MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MAX = 6
+# MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MIN = 6
+# MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MAX = 6
+#jun-modify
+MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MIN = 5
+MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MAX = 10
 
 MATERIAL_CONCRETE_CONDUCTIVITY_MIN = 0.01
 MATERIAL_CONCRETE_CONDUCTIVITY_MAX = 0.01
@@ -242,7 +257,7 @@ BOX_DIELECTRIC_SMOOTHING_ACTIVATION = "n"
 
 
 # ================================================================
-##cavity information
+# #cavity information
 
 SPHERE_MOVING_OFFSET_X = 0.05
 #jun-modify 0.4
@@ -336,7 +351,7 @@ def generate_material_soil():
     # relative permittivity
 
     material_soil=Material(
-        utility.random_sampling(MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN,MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX),
+        utility.random_sampling(MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN,MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX,2),
         utility.random_sampling(MATERIAL_SOIL_CONDUCTIVITY_MIN, MATERIAL_SOIL_CONDUCTIVITY_MAX),
         utility.random_sampling(MATERIAL_SOIL_RELATIVE_PERMEABILITY_MIN, MATERIAL_SOIL_RELATIVE_PERMEABILITY_MAX),
         utility.random_sampling(MATERIAL_SOIL_MAGNETIC_LOSS_MIN, MATERIAL_SOIL_MAGNETIC_LOSS_MAX),
@@ -348,7 +363,7 @@ def generate_material_soil():
 def generate_material_asphalt():
 
     material_asphalt = Material(
-        utility.random_sampling(MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN,MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX),
+        utility.random_sampling(MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN,MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX,2),
         utility.random_sampling(MATERIAL_ASPHALT_CONDUCTIVITY_MIN, MATERIAL_ASPHALT_CONDUCTIVITY_MAX),
         utility.random_sampling(MATERIAL_SOIL_RELATIVE_PERMEABILITY_MIN, MATERIAL_SOIL_RELATIVE_PERMEABILITY_MAX),
         utility.random_sampling(MATERIAL_SOIL_MAGNETIC_LOSS_MIN, MATERIAL_SOIL_MAGNETIC_LOSS_MAX),
@@ -528,7 +543,11 @@ def generate_cavity_cylinder(water=False, water_portion=0):
     # to_generate_cylinder_num=int(to_generate_cylinder_num/calculated_gcd)
     to_generate_cylinder_num=100
     #to_genearte_cylinder_with_water_portion_num=int(water_portion/calculated_gcd)
-    to_genearte_cylinder_with_water_portion_num=water_portion
+    if water==True:
+        to_genearte_cylinder_with_water_portion_num=water_portion
+    else:
+        to_genearte_cylinder_with_water_portion_num=0
+
     
     radius_per_cylinder=(cavity_radius_determined-MINIMUM_CAVITY_CYLINDER_END_RADIUS)/50
     height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num
@@ -768,10 +787,10 @@ def cavity_generation(iteration_index, water=False):
 
     generate_asphalt_box()
     generate_soil_box()
-    if water == True:
-        generate_cavity_cylinder(water=True,water_portion=utility.random_sampling(CAVITY_WATER_PORTION_MIN,CAVITY_WATER_PORTION_MAX))
-    else:
-        generate_cavity_sphere()
+    
+    
+    generate_cavity_cylinder(water,water_portion=utility.random_sampling(CAVITY_WATER_PORTION_MIN,CAVITY_WATER_PORTION_MAX))
+    
     textfile.write("\n")
 
     generate_geometry_view(iteration_index)
@@ -876,6 +895,7 @@ def auto_generation(underground_object_type,iteration_index):
 
     if underground_object_type=="cavity":
         cavity_generation(iteration_index,water=True)
+        # cavity_generation(iteration_index,water=False)
     elif underground_object_type=="manhole":
         manhole_generation(iteration_index,water=True)
     elif underground_object_type=="pothole":
@@ -896,6 +916,7 @@ def auto_generation(underground_object_type,iteration_index):
 
 if __name__ == '__main__':
     auto_generation(sys.argv[1], int(sys.argv[2]))
+    sys.exit()
 
 
 

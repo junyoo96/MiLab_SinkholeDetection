@@ -3,7 +3,7 @@
 #Measure execution time
 StartTime=$(date +%s)
 
-ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/Generation_Room_2
+ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files
 INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/Auto_Generation_Modules/InputFile_Auto_Generation_Modules/main.py
 INPUT_FILES_PATH=$ABSOLUTE_PATH/Input_Files
 MERGED_OUT_FILES_PATH=$ABSOLUTE_PATH/Merged_Out_Files
@@ -74,7 +74,7 @@ do
     # find $WORKTABLE_PATH/ -type f -name "*.vti" -delete
     # find $WORKTABLE_PATH/ -type f -name "*.out" -delete
     # find $WORKTABLE_PATH/ -type f -name "*.in" -delete
-    
+
 done
 
 #Measure execution time

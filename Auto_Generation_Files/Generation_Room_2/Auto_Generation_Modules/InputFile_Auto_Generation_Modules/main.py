@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Box import Box
 from Domain import Domain
 from Dx_Dy_Dz import Dx_Dy_Dz
@@ -82,11 +83,15 @@ MATERIAL_SOIL_MAGNETIC_LOSS_MAX = 0
 MATERIAL_SOIL_IDENTIFIER = "soil"
 
 # ================================================================
-##material
+# #material
 # asphalt
 
-MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 4
-MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 7
+#asphalt
+# MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 4
+# MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 7
+#jun-modify
+MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 3
+MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 5
 
 # MATERIAL_ASPHALT_CONDUCTIVITY_MIN = 0.02
 # MATERIAL_ASPHALT_CONDUCTIVITY_MAX = 0.02
@@ -105,11 +110,17 @@ MATERIAL_ASPHALT_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 # ================================================================
 ##material
 # water
-MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN = 80
-MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX = 80
+# MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN = 80
+# MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX = 80
+#jun-modify
+MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN = 81
+MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX = 81
 
-MATERIAL_WATER_CONDUCTIVITY_MIN = 0.05
-MATERIAL_WATER_CONDUCTIVITY_MAX = 0.05
+# MATERIAL_WATER_CONDUCTIVITY_MIN = 0.05
+# MATERIAL_WATER_CONDUCTIVITY_MAX = 0.05
+#jun-modify
+MATERIAL_WATER_CONDUCTIVITY_MIN = 1e-04
+MATERIAL_WATER_CONDUCTIVITY_MAX = 0.03
 
 MATERIAL_WATER_RELATIVE_PERMEABILITY_MIN = 1
 MATERIAL_WATER_RELATIVE_PERMEABILITY_MAX = 1
@@ -246,7 +257,7 @@ BOX_DIELECTRIC_SMOOTHING_ACTIVATION = "n"
 
 
 # ================================================================
-##cavity information
+# #cavity information
 
 SPHERE_MOVING_OFFSET_X = 0.05
 #jun-modify 0.4
@@ -883,8 +894,8 @@ def auto_generation(underground_object_type,iteration_index):
     #check_parameter_range()
 
     if underground_object_type=="cavity":
-        # cavity_generation(iteration_index,water=True)
-        cavity_generation(iteration_index,water=False)
+        cavity_generation(iteration_index,water=True)
+        # cavity_generation(iteration_index,water=False)
     elif underground_object_type=="manhole":
         manhole_generation(iteration_index,water=True)
     elif underground_object_type=="pothole":
@@ -906,6 +917,6 @@ def auto_generation(underground_object_type,iteration_index):
 if __name__ == '__main__':
     auto_generation(sys.argv[1], int(sys.argv[2]))
     sys.exit()
-    
+
 
 

@@ -72,7 +72,7 @@ MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN = 4
 MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX = 12
 
 MATERIAL_SOIL_CONDUCTIVITY_MIN = 1e-07 # 1e-07
-MATERIAL_SOIL_CONDUCTIVITY_MAX = 0.1
+MATERIAL_SOIL_CONDUCTIVITY_MAX = 0.05
 
 MATERIAL_SOIL_RELATIVE_PERMEABILITY_MIN = 1
 MATERIAL_SOIL_RELATIVE_PERMEABILITY_MAX = 1
@@ -894,8 +894,8 @@ def auto_generation(underground_object_type,iteration_index):
     #check_parameter_range()
 
     if underground_object_type=="cavity":
-        cavity_generation(iteration_index,water=True)
-        # cavity_generation(iteration_index,water=False)
+        # cavity_generation(iteration_index,water=True)
+        cavity_generation(iteration_index,water=False)
     elif underground_object_type=="manhole":
         manhole_generation(iteration_index,water=True)
     elif underground_object_type=="pothole":

@@ -168,7 +168,7 @@ WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
 #jun-modify
 # WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.5
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.8
 WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
 WAVEFORM_IDENTIFIER = "my_pulse"
@@ -518,21 +518,24 @@ def generate_cavity_cylinder(water=False, water_portion=0):
 
     cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
     cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
+
+    # #jun-modify
+    # #0.1m(10cm)
+    # SPHERE_RADIUS_MAX=SPHERE_RADIUS_MIN
+    # #cavity z top 0.5m
+    # SPHERE_TOP_Z_MIN=0.3
+    # SPHERE_TOP_Z_MAX=0.3
+    # #jun-modify
+
     cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
+
+    # to prevent part of cavity missing
+    SPHERE_TOP_Z_MIN=cavity_radius_determined*2
     cavity_z_top_determined=utility.random_sampling(SPHERE_TOP_Z_MIN, SPHERE_TOP_Z_MAX)
     
     cavity_z_determined=cavity_z_top_determined-cavity_radius_determined
     cavity_lower_z_determined = cavity_z_determined-cavity_radius_determined
 
-    #jun-modify
-    # cavity_lower_x_determined=0.3
-    # cavity_lower_y_determined=0.3
-    # cavity_radius_determined =0.05
-    # cavity_lower_z_determined = 0.2
-    #water_portion=
-    
-    #
-    #to_generate_cylinder_num=int(cavity_radius_determined/MINIMUM_CAVITY_CYLINDER_END_RADIUS)*2-1
 
     water_portion=int(water_portion*100)
 
@@ -540,15 +543,14 @@ def generate_cavity_cylinder(water=False, water_portion=0):
     to_genearte_cylinder_with_water_portion_num=0
 
     calculated_gcd=gcd(to_generate_cylinder_num,water_portion)
-    # to_generate_cylinder_num=int(to_generate_cylinder_num/calculated_gcd)
-    to_generate_cylinder_num=100
-    #to_genearte_cylinder_with_water_portion_num=int(water_portion/calculated_gcd)
+    
+    
+    
     if water==True:
         to_genearte_cylinder_with_water_portion_num=water_portion
     else:
         to_genearte_cylinder_with_water_portion_num=0
 
-    
     radius_per_cylinder=(cavity_radius_determined-MINIMUM_CAVITY_CYLINDER_END_RADIUS)/50
     height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num
 
@@ -563,9 +565,15 @@ def generate_cavity_cylinder(water=False, water_portion=0):
     current_material_identifier=None
     current_dielectric_smoothing_activation = None
 
+    print("cavity radius:",round(cavity_radius_determined,4))
+    print("cavity lower z:", round(cavity_lower_z_determined,4))
+    print("cavity center z:", round(cavity_z_determined,4))
+    print("cavity top z:", round(cavity_z_top_determined,4))
+
     for i in range(1,to_generate_cylinder_num+1):
 
-        
+        # print("cavity testing",i,round(current_cylinder_lower_z,4))
+
         if i<=to_genearte_cylinder_with_water_portion_num:
             current_material_identifier = MATERIAL_WATER_IDENTIFIER
             current_dielectric_smoothing_activation=DIELECTRIC_SMOOTHING_ACTIVATION_NO
@@ -590,14 +598,22 @@ def generate_cavity_cylinder(water=False, water_portion=0):
 
         current_cylinder_lower_z+=height_per_cylinder
 
-        if i<to_generate_cylinder_num/2:
-            current_cylinder_radius+=radius_per_cylinder
+        if i==to_generate_cylinder_num:
+            break        
+
+        
+        if i<=to_generate_cylinder_num/2:
+            
+            current_cylinder_radius=utility.getXAxis(0,cavity_z_determined,current_cylinder_lower_z,cavity_radius_determined)
+            
         else:
-            tmp=current_cylinder_radius
-            current_cylinder_radius -= radius_per_cylinder
+            
             if current_cylinder_radius<MINIMUM_CAVITY_CYLINDER_END_RADIUS:
                 current_cylinder_radius=MINIMUM_CAVITY_CYLINDER_END_RADIUS
-
+            
+            current_cylinder_radius=utility.getXAxis(0,cavity_z_determined,current_cylinder_lower_z,cavity_radius_determined)
+        
+        
 
 def generate_pipe(water=False):
     pipe=None

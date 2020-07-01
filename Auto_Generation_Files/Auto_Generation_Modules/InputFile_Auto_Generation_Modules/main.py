@@ -168,7 +168,7 @@ WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
 #jun-modify
 # WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.5
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.8
 WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
 WAVEFORM_IDENTIFIER = "my_pulse"
@@ -518,7 +518,17 @@ def generate_cavity_cylinder(water=False, water_portion=0):
 
     cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
     cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
+
+    #jun-modify
+    #0.1m(10cm)
+    SPHERE_RADIUS_MAX=SPHERE_RADIUS_MIN
+    #cavity z top 0.5m
+    SPHERE_TOP_Z_MIN=0.3
+    SPHERE_TOP_Z_MAX=0.3
+    #jun-modify
+
     cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
+
     cavity_z_top_determined=utility.random_sampling(SPHERE_TOP_Z_MIN, SPHERE_TOP_Z_MAX)
     
     cavity_z_determined=cavity_z_top_determined-cavity_radius_determined
@@ -548,7 +558,6 @@ def generate_cavity_cylinder(water=False, water_portion=0):
     else:
         to_genearte_cylinder_with_water_portion_num=0
 
-    
     radius_per_cylinder=(cavity_radius_determined-MINIMUM_CAVITY_CYLINDER_END_RADIUS)/50
     height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num
 

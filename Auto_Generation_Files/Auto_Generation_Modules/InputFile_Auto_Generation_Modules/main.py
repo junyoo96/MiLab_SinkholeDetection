@@ -167,9 +167,8 @@ WAVEFORM_MAX_AMPLITUDE_MIN = 1
 WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
 #jun-modify
-# WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.8
-WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
+WAVEFORM_CENTER_FREQUENCY_MAX = 0.4
 
 WAVEFORM_IDENTIFIER = "my_pulse"
 
@@ -544,8 +543,6 @@ def generate_cavity_cylinder(water=False, water_portion=0):
 
     calculated_gcd=gcd(to_generate_cylinder_num,water_portion)
     
-    
-    
     if water==True:
         to_genearte_cylinder_with_water_portion_num=water_portion
     else:
@@ -910,8 +907,9 @@ def auto_generation(underground_object_type,iteration_index):
     #check_parameter_range()
 
     if underground_object_type=="cavity":
-        # cavity_generation(iteration_index,water=True)
         cavity_generation(iteration_index,water=False)
+        # cavity_generation(iteration_index,water=True)
+        
     elif underground_object_type=="manhole":
         manhole_generation(iteration_index,water=True)
     elif underground_object_type=="pothole":

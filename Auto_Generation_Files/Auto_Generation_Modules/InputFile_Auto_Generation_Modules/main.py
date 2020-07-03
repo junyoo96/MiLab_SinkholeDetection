@@ -87,9 +87,6 @@ MATERIAL_SOIL_IDENTIFIER = "soil"
 # asphalt
 
 #asphalt
-# MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 4
-# MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 7
-#jun-modify
 MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN = 3
 MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX = 5
 
@@ -110,15 +107,9 @@ MATERIAL_ASPHALT_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 # ================================================================
 ##material
 # water
-# MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN = 80
-# MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX = 80
-#jun-modify
 MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN = 81
 MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX = 81
 
-# MATERIAL_WATER_CONDUCTIVITY_MIN = 0.05
-# MATERIAL_WATER_CONDUCTIVITY_MAX = 0.05
-#jun-modify
 MATERIAL_WATER_CONDUCTIVITY_MIN = 1e-04
 MATERIAL_WATER_CONDUCTIVITY_MAX = 0.03
 
@@ -133,10 +124,7 @@ MATERIAL_WATER_DIELECTRIC_SMOOTHING_ACTIVATION="n"
 
 # ================================================================
 ##material
-# concrete
-# MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MIN = 6
-# MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MAX = 6
-#jun-modify
+
 MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MIN = 5
 MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MAX = 10
 
@@ -167,8 +155,8 @@ WAVEFORM_MAX_AMPLITUDE_MIN = 1
 WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
 #jun-modify
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.2
-WAVEFORM_CENTER_FREQUENCY_MAX = 0.4
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.3
+WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
 WAVEFORM_IDENTIFIER = "my_pulse"
 
@@ -275,6 +263,10 @@ SPHERE_Y_MAX = round(DOMAIN_Y / 2 + SPHERE_MOVING_OFFSET_Y,2)
 #0.21~0.78
 SPHERE_TOP_Z_MIN = round(ASPHALT_BOX_LOWER_LEFT_Z/2-SPHERE_MOVING_OFFSET_Z_BOTTOM,3)
 SPHERE_TOP_Z_MAX = round(ASPHALT_BOX_LOWER_LEFT_Z/2+SPHERE_MOVING_OFFSET_Z_TOP,3)
+
+#SPHERE_TOP_Z_MIN when center_frequency is high (0.7~0.8GHz)
+#0.5m
+SPHERE_TOP_Z_MIN_WITH_HIGH_CENTER_FREQUENCY=0.5
 
 #need to modify like sphere top z
 SPHERE_Z_MIN = round(DOMAIN_Z_UNDERGROUND_START/2-SPHERE_MOVING_OFFSET_Z,3)
@@ -511,26 +503,22 @@ def generate_cavity_sphere(water=False):
 #generate cavity by shape of cylinder
 def generate_cavity_cylinder(water=False, water_portion=0):
 
-    #jun-modify
-    #MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.01 
     MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.02
 
     cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
     cavity_lower_y_determined=utility.random_sampling(SPHERE_Y_MIN, SPHERE_Y_MAX)
 
-    # #jun-modify
-    # #0.1m(10cm)
-    # SPHERE_RADIUS_MAX=SPHERE_RADIUS_MIN
-    # #cavity z top 0.5m
-    # SPHERE_TOP_Z_MIN=0.3
-    # SPHERE_TOP_Z_MAX=0.3
-    # #jun-modify
-
     cavity_radius_determined = utility.random_sampling(SPHERE_RADIUS_MIN, SPHERE_RADIUS_MAX)
 
-    # to prevent part of cavity missing
-    SPHERE_TOP_Z_MIN=cavity_radius_determined*2
-    cavity_z_top_determined=utility.random_sampling(SPHERE_TOP_Z_MIN, SPHERE_TOP_Z_MAX)
+    # #to prevent part of cavity missing
+    # # SPHERE_TOP_Z_MIN=cavity_radius_determined*2
+    
+    # #set sphere_top_z_min when center_frequency is 0.7~0.8GHz
+    sphere_top_z_min_determined=SPHERE_TOP_Z_MIN
+    if DETERMINED_WAVERFORM_CENTER_FREQUENCY>=0.7:
+        sphere_top_z_min_determined=SPHERE_TOP_Z_MIN_WITH_HIGH_CENTER_FREQUENCY
+
+    cavity_z_top_determined=utility.random_sampling(sphere_top_z_min_determined, SPHERE_TOP_Z_MAX)
     
     cavity_z_determined=cavity_z_top_determined-cavity_radius_determined
     cavity_lower_z_determined = cavity_z_determined-cavity_radius_determined
@@ -550,10 +538,7 @@ def generate_cavity_cylinder(water=False, water_portion=0):
 
     radius_per_cylinder=(cavity_radius_determined-MINIMUM_CAVITY_CYLINDER_END_RADIUS)/50
     height_per_cylinder=cavity_radius_determined*2/to_generate_cylinder_num
-
-    # if to_genearte_cylinder_with_water_portion_num!=0:
-    #     to_genearte_cylinder_with_water_portion_num+=1
-    
+ 
     current_cylinder_lower_x=cavity_lower_x_determined
     current_cylinder_lower_y= cavity_lower_y_determined
     current_cylinder_lower_z = cavity_lower_z_determined   
@@ -562,14 +547,7 @@ def generate_cavity_cylinder(water=False, water_portion=0):
     current_material_identifier=None
     current_dielectric_smoothing_activation = None
 
-    print("cavity radius:",round(cavity_radius_determined,4))
-    print("cavity lower z:", round(cavity_lower_z_determined,4))
-    print("cavity center z:", round(cavity_z_determined,4))
-    print("cavity top z:", round(cavity_z_top_determined,4))
-
     for i in range(1,to_generate_cylinder_num+1):
-
-        # print("cavity testing",i,round(current_cylinder_lower_z,4))
 
         if i<=to_genearte_cylinder_with_water_portion_num:
             current_material_identifier = MATERIAL_WATER_IDENTIFIER
@@ -909,7 +887,6 @@ def auto_generation(underground_object_type,iteration_index):
     if underground_object_type=="cavity":
         cavity_generation(iteration_index,water=False)
         # cavity_generation(iteration_index,water=True)
-        
     elif underground_object_type=="manhole":
         manhole_generation(iteration_index,water=True)
     elif underground_object_type=="pothole":

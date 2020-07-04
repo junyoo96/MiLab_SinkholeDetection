@@ -1,3 +1,0 @@
-Generated underground object : cavity
-Generated number : 50
-Execution Time : 2339 minutes

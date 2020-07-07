@@ -1,0 +1,118 @@
+#title: B-scan of a cavity
+#domain: 0.15 0.9 1.1
+#dx_dy_dz: 0.002 0.002 0.002
+#time_window: 30e-9
+
+#material: 4.52 0.0431025 1.0 0.0 soil
+#material: 4.5 8.4e-12 1.0 0.0 asphalt
+
+#waveform: ricker 1.0 0.5e9 my_pulse
+#hertzian_dipole: x 0.075 0.1 1.02 my_pulse
+#rx: 0.075 0.15 1.02
+#src_steps: 0 0.02 0
+#rx_steps: 0 0.02 0
+
+#box: 0 0 0.8 0.15 0.9 1 asphalt n
+#box: 0 0 0 0.15 0.9 0.8 soil n
+#cylinder: 0.05 0.22 0.05 0.05 0.22 0.054 0.02 free_space y
+#cylinder: 0.05 0.22 0.054 0.05 0.22 0.058 0.042 free_space y
+#cylinder: 0.05 0.22 0.058 0.05 0.22 0.063 0.059 free_space y
+#cylinder: 0.05 0.22 0.063 0.05 0.22 0.067 0.072 free_space y
+#cylinder: 0.05 0.22 0.067 0.05 0.22 0.071 0.082 free_space y
+#cylinder: 0.05 0.22 0.071 0.05 0.22 0.075 0.092 free_space y
+#cylinder: 0.05 0.22 0.075 0.05 0.22 0.079 0.10 free_space y
+#cylinder: 0.05 0.22 0.079 0.05 0.22 0.084 0.107 free_space y
+#cylinder: 0.05 0.22 0.084 0.05 0.22 0.088 0.114 free_space y
+#cylinder: 0.05 0.22 0.088 0.05 0.22 0.092 0.120 free_space y
+#cylinder: 0.05 0.22 0.092 0.05 0.22 0.096 0.126 free_space y
+#cylinder: 0.05 0.22 0.096 0.05 0.22 0.1 0.131 free_space y
+#cylinder: 0.05 0.22 0.1 0.05 0.22 0.105 0.136 free_space y
+#cylinder: 0.05 0.22 0.105 0.05 0.22 0.109 0.141 free_space y
+#cylinder: 0.05 0.22 0.109 0.05 0.22 0.113 0.146 free_space y
+#cylinder: 0.05 0.22 0.113 0.05 0.22 0.117 0.150 free_space y
+#cylinder: 0.05 0.22 0.117 0.05 0.22 0.121 0.154 free_space y
+#cylinder: 0.05 0.22 0.121 0.05 0.22 0.126 0.158 free_space y
+#cylinder: 0.05 0.22 0.126 0.05 0.22 0.13 0.161 free_space y
+#cylinder: 0.05 0.22 0.13 0.05 0.22 0.134 0.165 free_space y
+#cylinder: 0.05 0.22 0.134 0.05 0.22 0.138 0.168 free_space y
+#cylinder: 0.05 0.22 0.138 0.05 0.22 0.142 0.171 free_space y
+#cylinder: 0.05 0.22 0.142 0.05 0.22 0.147 0.174 free_space y
+#cylinder: 0.05 0.22 0.147 0.05 0.22 0.151 0.177 free_space y
+#cylinder: 0.05 0.22 0.151 0.05 0.22 0.155 0.179 free_space y
+#cylinder: 0.05 0.22 0.155 0.05 0.22 0.159 0.182 free_space y
+#cylinder: 0.05 0.22 0.159 0.05 0.22 0.163 0.184 free_space y
+#cylinder: 0.05 0.22 0.163 0.05 0.22 0.168 0.186 free_space y
+#cylinder: 0.05 0.22 0.168 0.05 0.22 0.172 0.189 free_space y
+#cylinder: 0.05 0.22 0.172 0.05 0.22 0.176 0.191 free_space y
+#cylinder: 0.05 0.22 0.176 0.05 0.22 0.18 0.192 free_space y
+#cylinder: 0.05 0.22 0.18 0.05 0.22 0.184 0.194 free_space y
+#cylinder: 0.05 0.22 0.184 0.05 0.22 0.189 0.196 free_space y
+#cylinder: 0.05 0.22 0.189 0.05 0.22 0.193 0.198 free_space y
+#cylinder: 0.05 0.22 0.193 0.05 0.22 0.197 0.199 free_space y
+#cylinder: 0.05 0.22 0.197 0.05 0.22 0.201 0.200 free_space y
+#cylinder: 0.05 0.22 0.201 0.05 0.22 0.205 0.202 free_space y
+#cylinder: 0.05 0.22 0.205 0.05 0.22 0.21 0.203 free_space y
+#cylinder: 0.05 0.22 0.21 0.05 0.22 0.214 0.204 free_space y
+#cylinder: 0.05 0.22 0.214 0.05 0.22 0.218 0.205 free_space y
+#cylinder: 0.05 0.22 0.218 0.05 0.22 0.222 0.206 free_space y
+#cylinder: 0.05 0.22 0.222 0.05 0.22 0.226 0.207 free_space y
+#cylinder: 0.05 0.22 0.226 0.05 0.22 0.231 0.207 free_space y
+#cylinder: 0.05 0.22 0.231 0.05 0.22 0.235 0.208 free_space y
+#cylinder: 0.05 0.22 0.235 0.05 0.22 0.239 0.208 free_space y
+#cylinder: 0.05 0.22 0.239 0.05 0.22 0.243 0.209 free_space y
+#cylinder: 0.05 0.22 0.243 0.05 0.22 0.247 0.209 free_space y
+#cylinder: 0.05 0.22 0.247 0.05 0.22 0.252 0.210 free_space y
+#cylinder: 0.05 0.22 0.252 0.05 0.22 0.256 0.210 free_space y
+#cylinder: 0.05 0.22 0.256 0.05 0.22 0.26 0.210 free_space y
+#cylinder: 0.05 0.22 0.26 0.05 0.22 0.264 0.210 free_space y
+#cylinder: 0.05 0.22 0.264 0.05 0.22 0.268 0.210 free_space y
+#cylinder: 0.05 0.22 0.268 0.05 0.22 0.273 0.210 free_space y
+#cylinder: 0.05 0.22 0.273 0.05 0.22 0.277 0.210 free_space y
+#cylinder: 0.05 0.22 0.277 0.05 0.22 0.281 0.209 free_space y
+#cylinder: 0.05 0.22 0.281 0.05 0.22 0.285 0.209 free_space y
+#cylinder: 0.05 0.22 0.285 0.05 0.22 0.289 0.208 free_space y
+#cylinder: 0.05 0.22 0.289 0.05 0.22 0.294 0.208 free_space y
+#cylinder: 0.05 0.22 0.294 0.05 0.22 0.298 0.207 free_space y
+#cylinder: 0.05 0.22 0.298 0.05 0.22 0.302 0.207 free_space y
+#cylinder: 0.05 0.22 0.302 0.05 0.22 0.306 0.206 free_space y
+#cylinder: 0.05 0.22 0.306 0.05 0.22 0.31 0.205 free_space y
+#cylinder: 0.05 0.22 0.31 0.05 0.22 0.315 0.204 free_space y
+#cylinder: 0.05 0.22 0.315 0.05 0.22 0.319 0.203 free_space y
+#cylinder: 0.05 0.22 0.319 0.05 0.22 0.323 0.202 free_space y
+#cylinder: 0.05 0.22 0.323 0.05 0.22 0.327 0.200 free_space y
+#cylinder: 0.05 0.22 0.327 0.05 0.22 0.331 0.199 free_space y
+#cylinder: 0.05 0.22 0.331 0.05 0.22 0.336 0.198 free_space y
+#cylinder: 0.05 0.22 0.336 0.05 0.22 0.34 0.196 free_space y
+#cylinder: 0.05 0.22 0.34 0.05 0.22 0.344 0.194 free_space y
+#cylinder: 0.05 0.22 0.344 0.05 0.22 0.348 0.192 free_space y
+#cylinder: 0.05 0.22 0.348 0.05 0.22 0.352 0.191 free_space y
+#cylinder: 0.05 0.22 0.352 0.05 0.22 0.357 0.189 free_space y
+#cylinder: 0.05 0.22 0.357 0.05 0.22 0.361 0.186 free_space y
+#cylinder: 0.05 0.22 0.361 0.05 0.22 0.365 0.184 free_space y
+#cylinder: 0.05 0.22 0.365 0.05 0.22 0.369 0.182 free_space y
+#cylinder: 0.05 0.22 0.369 0.05 0.22 0.373 0.179 free_space y
+#cylinder: 0.05 0.22 0.373 0.05 0.22 0.378 0.177 free_space y
+#cylinder: 0.05 0.22 0.378 0.05 0.22 0.382 0.174 free_space y
+#cylinder: 0.05 0.22 0.382 0.05 0.22 0.386 0.171 free_space y
+#cylinder: 0.05 0.22 0.386 0.05 0.22 0.39 0.168 free_space y
+#cylinder: 0.05 0.22 0.39 0.05 0.22 0.394 0.165 free_space y
+#cylinder: 0.05 0.22 0.394 0.05 0.22 0.399 0.161 free_space y
+#cylinder: 0.05 0.22 0.399 0.05 0.22 0.403 0.158 free_space y
+#cylinder: 0.05 0.22 0.403 0.05 0.22 0.407 0.154 free_space y
+#cylinder: 0.05 0.22 0.407 0.05 0.22 0.411 0.150 free_space y
+#cylinder: 0.05 0.22 0.411 0.05 0.22 0.415 0.146 free_space y
+#cylinder: 0.05 0.22 0.415 0.05 0.22 0.42 0.141 free_space y
+#cylinder: 0.05 0.22 0.42 0.05 0.22 0.424 0.136 free_space y
+#cylinder: 0.05 0.22 0.424 0.05 0.22 0.428 0.131 free_space y
+#cylinder: 0.05 0.22 0.428 0.05 0.22 0.432 0.126 free_space y
+#cylinder: 0.05 0.22 0.432 0.05 0.22 0.436 0.120 free_space y
+#cylinder: 0.05 0.22 0.436 0.05 0.22 0.441 0.114 free_space y
+#cylinder: 0.05 0.22 0.441 0.05 0.22 0.445 0.107 free_space y
+#cylinder: 0.05 0.22 0.445 0.05 0.22 0.449 0.10 free_space y
+#cylinder: 0.05 0.22 0.449 0.05 0.22 0.453 0.092 free_space y
+#cylinder: 0.05 0.22 0.453 0.05 0.22 0.457 0.082 free_space y
+#cylinder: 0.05 0.22 0.457 0.05 0.22 0.462 0.072 free_space y
+#cylinder: 0.05 0.22 0.462 0.05 0.22 0.466 0.059 free_space y
+#cylinder: 0.05 0.22 0.466 0.05 0.22 0.47 0.042 free_space y
+
+#geometry_view: 0 0 0 0.15 0.9 1.1 0.002 0.002 0.002 cavity_29_ n

@@ -16,6 +16,7 @@ from Utility import Utility
 from Waveform import Waveform
 from Pipe import Pipe
 from Manhole import Manhole
+from NumOfThreads import NumOfThreads
 
 import sys
 import os.path
@@ -36,6 +37,9 @@ DIELECTRIC_SMOOTHING_ACTIVATION_YES="y"
 DIELECTRIC_SMOOTHING_ACTIVATION_NO="n"
 
 # ================================================================
+NUM_OF_PHYSICAL_THREADS=10
+
+# ===============================================================
 # domain parameter
 # 지하가 시작되는 지점(높이)
 DOMAIN_Z_UNDERGROUND_START = 1
@@ -660,6 +664,7 @@ def generate_model_environment_setting():
     generate_domain()
     generate_dx_dz_dy()
     generate_time_window()
+    generate_numberOfPhysicalCore_setting()
 
     textfile.write("\n")
 
@@ -671,6 +676,11 @@ def generate_waveform_setting():
     generate_rx_steps()
 
     textfile.write("\n")
+
+def generate_numberOfPhysicalCore_setting():
+    numOfThreads=NumOfThreads(NUM_OF_PHYSICAL_THREADS)
+    numOfThreads.write_textfile(textfile)
+
 
 # ================================================================
 # def check_parameter_range():
@@ -898,7 +908,6 @@ def auto_generation(underground_object_type,iteration_index):
     else:
         print("wrong underground_object_type")
         sys.exit()
-    
     
     #generate waveform info file for image processing
     generate_waveform_info_file()

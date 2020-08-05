@@ -18,7 +18,10 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
     concat_center_frequency=strcat(concat_center_frequency,cen_frequency_back)
     input_center_frequency=str2double(concat_center_frequency)
    
-    absolute_path='/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files'
+    % for DGX
+    %absolute_path='/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files'
+    % for DGX1
+    absolute_path='/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files'
     Files=dir('../../Worktable/*.out')
 
     merged_out_filename=''

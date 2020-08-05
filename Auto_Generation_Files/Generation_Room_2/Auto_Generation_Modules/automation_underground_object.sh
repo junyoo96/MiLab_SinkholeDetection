@@ -32,7 +32,7 @@ do
     for entry in $WORKTABLE_PATH/*.in;
     do         
         input_file_name=$entry
-        python -m gprMax $input_file_name -n $trace_number -gpu
+        python -m gprMax $input_file_name -n $trace_number -gpu 0 1
     done
 
     #make merged_out file ( remove other out files )

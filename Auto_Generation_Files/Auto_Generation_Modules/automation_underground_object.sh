@@ -3,7 +3,10 @@
 #Measure execution time
 StartTime=$(date +%s)
 
-ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files
+#For DGX
+#ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
+#For DGX1
+ABSOLUTE_PATH=/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
 INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/Auto_Generation_Modules/InputFile_Auto_Generation_Modules/main.py
 INPUT_FILES_PATH=$ABSOLUTE_PATH/Input_Files
 MERGED_OUT_FILES_PATH=$ABSOLUTE_PATH/Merged_Out_Files
@@ -14,6 +17,7 @@ WAVEFORM_INFO_FILE=$WORKTABLE_PATH/waveform_info.txt
 
 underground_object_type_to_generate=$1
 numbers_to_generate=$2
+#gpu_index_to_run=$3
 
 #convert to lower case
 underground_object_type_to_generate=$(echo "$underground_object_type_to_generate" | tr '[:upper:]' '[:lower:]')
@@ -32,7 +36,7 @@ do
     for entry in $WORKTABLE_PATH/*.in;
     do         
         input_file_name=$entry
-        python -m gprMax $input_file_name -n $trace_number -gpu
+        python -m gprMax $input_file_name -n $trace_number -gpu 0
     done
 
     #make merged_out file ( remove other out files )

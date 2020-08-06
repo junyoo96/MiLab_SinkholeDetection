@@ -8,6 +8,9 @@ class Pipe(Utility):
         self.pipe_dielectric_smoothing_activation = pipe_dielectirc_smoothing_activation
         self.pipe_pass_point_y_range_offset = 0.02
         self.pipe_pass_point_x_range_offset = 0.02
+        self.pipe_pass_point_z_range_offset = 0.02
+        self.pipe_top_z = 0.499
+        self.pipe_bottom_z = 0.201
         self.pipe_thickness = 0.2
         self.pipe_content_thickness = 0.1
         self.pipe_content_material_identifier = pipe_content_material_identifier
@@ -30,12 +33,24 @@ class Pipe(Utility):
         pipe_pass_point_y=utility.random_sampling(pipe_pass_point_y_min,
                                                   pipe_pass_point_y_max)
 
+        pipe_highest_center_point_z=round(self.pipe_top_z-self.pipe_thickness/2,3)
+        pipe_lowest_center_point_z=round(self.pipe_bottom_z-self.pipe_thickness/2,3)
+        pipe_start_point_z=utility.random_sampling(pipe_lowest_center_point_z,pipe_highest_center_point_z)
+        pipe_end_point_z = pipe_start_point_z
+
+        print("pipe z range:",pipe_lowest_center_point_z,pipe_highest_center_point_z)
+        
 
         pipe_direction=utility.random_sampling(0,1)
         pipe_start_point_x =0
         pipe_start_point_y =0
         pipe_end_point_x =0
         pipe_end_point_y =0
+
+
+        #jun-modify only for horizontal
+        pipe_direction=0
+
         #x축으로 길게
         if pipe_direction==0:
             pipe_start_point_x=pipe_pass_point_x
@@ -49,16 +64,15 @@ class Pipe(Utility):
             pipe_end_point_x =domain_x
             pipe_end_point_y =pipe_pass_point_y
 
-
-        pipe_start_point_z = utility.random_sampling(0.25,0.35)
-        pipe_end_point_z = pipe_start_point_z
-
+        
         pipe_start_point_x =round(pipe_start_point_x,2)
         pipe_start_point_y =round(pipe_start_point_y,2)
-        pipe_start_point_z=round(pipe_start_point_z,2)
+        pipe_start_point_z=round(pipe_start_point_z,3)
         pipe_end_point_x =round(pipe_end_point_x,2)
         pipe_end_point_y =round(pipe_end_point_y,2)
-        pipe_end_point_z =round(pipe_end_point_z,2)
+        pipe_end_point_z =round(pipe_end_point_z,3)
+
+        print("pipe center z:",pipe_start_point_z)
 
 
         #1. Pipe 지나갈 점 결정
@@ -163,18 +177,3 @@ class Pipe(Utility):
                                         )
 
         pipe_content_cylinder.write_textfile(textfile)
-
-# if __name__ == '__main__':
-#     pipe=Pipe(True,0.5)
-#     pipe.generate_pipe_with_cylinder(
-#         domain_x=0.6,
-#         domain_y=0.6,
-#         domain_z=1.1,
-#         pipe_thickness=0.2,
-#         pipe_material="pec",
-#         pipe_dielectric_smoothing_activation="n",
-#         textfile=
-
-
-
-

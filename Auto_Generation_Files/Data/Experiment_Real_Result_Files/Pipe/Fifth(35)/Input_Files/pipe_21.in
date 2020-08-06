@@ -1,0 +1,23 @@
+#title: B-scan of a pipe
+#domain: 0.15 0.9 1.1
+#dx_dy_dz: 0.002 0.002 0.002
+#time_window: 30e-9
+#num_threads: 10
+
+#material: 9.83 0.0285142 1.0 0.0 soil
+#material: 3.47 8.8e-12 1.0 0.0 asphalt
+#material: 81.0 0.0176 1.0 0.0 water
+#material: 7.0 3.36379e-07 1.0 0.0 concrete
+
+#waveform: ricker 1.0 0.8e9 my_pulse
+#hertzian_dipole: x 0.075 0.1 1.02 my_pulse
+#rx: 0.075 0.15 1.02
+#src_steps: 0 0.02 0
+#rx_steps: 0 0.02 0
+
+#box: 0 0 0.8 0.15 0.9 1 asphalt n
+#box: 0 0 0 0.15 0.9 0.8 soil n
+#cylinder: 0.06 0 0.327 0.06 0.9 0.327 0.2 concrete n
+#cylinder: 0.06 0 0.327 0.06 0.9 0.327 0.1 water n
+
+#geometry_view: 0 0 0 0.15 0.9 1.1 0.002 0.002 0.002 pipe_21_ n

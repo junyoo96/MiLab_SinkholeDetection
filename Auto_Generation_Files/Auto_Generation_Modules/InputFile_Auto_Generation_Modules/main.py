@@ -159,7 +159,7 @@ WAVEFORM_MAX_AMPLITUDE_MIN = 1
 WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
 #jun-modify
-WAVEFORM_CENTER_FREQUENCY_MIN = 0.7
+WAVEFORM_CENTER_FREQUENCY_MIN = 0.3
 WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
 WAVEFORM_IDENTIFIER = "my_pulse"
@@ -902,8 +902,7 @@ def auto_generation(underground_object_type,iteration_index):
     elif underground_object_type=="pothole":
         print("pothole")
     elif underground_object_type=="pipe":
-        pipe_generation(iteration_index,water=False)
-        #pipe_generation(iteration_index,water=True)
+        pipe_generation(iteration_index,water=True)
     elif underground_object_type=="subsoil":
         subsoil_generation(iteration_index)
     else:

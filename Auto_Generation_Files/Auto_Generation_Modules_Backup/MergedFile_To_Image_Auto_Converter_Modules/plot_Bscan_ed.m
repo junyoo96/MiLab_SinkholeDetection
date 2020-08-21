@@ -11,27 +11,27 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
     
     %clear all, clc
 
-    cen_frequency_front=int2str(cen_frequency_front_in)
-    cen_frequency_back=int2str(cen_frequency_back_in)
+    cen_frequency_front=int2str(cen_frequency_front_in);
+    cen_frequency_back=int2str(cen_frequency_back_in);
     
-    concat_center_frequency=strcat(cen_frequency_front,'.')
-    concat_center_frequency=strcat(concat_center_frequency,cen_frequency_back)
-    input_center_frequency=str2double(concat_center_frequency)
+    concat_center_frequency=strcat(cen_frequency_front,'.');
+    concat_center_frequency=strcat(concat_center_frequency,cen_frequency_back);
+    input_center_frequency=str2double(concat_center_frequency);
    
     % for DGX
-    %absolute_path='/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files'
+    absolute_path='/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files';
     % for DGX1
-    absolute_path='/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files'
-    Files=dir('../../Worktable/*.out')
+    %absolute_path='/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files';
+    Files=dir('../../Worktable/*.out');
 
-    merged_out_filename=''
+    merged_out_filename='';
 
     for k=1:length(Files)
-        merged_out_filename=Files(k).name    
+        merged_out_filename=Files(k).name;    
     end
 
-    worktable_path=strcat(absolute_path,'/Worktable/')
-    filename=strcat(worktable_path,merged_out_filename)
+    worktable_path=strcat(absolute_path,'/Worktable/');
+    filename=strcat(worktable_path,merged_out_filename);
 
     % Open file and read fields
     if filename ~= 0
@@ -39,7 +39,7 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
         dt = h5readatt(filename, '/', 'dt');        
 
         %Set field to show (There was option 'Ex', 'Ey', 'Ez')
-        field = 'Ex'
+        field = 'Ex';
         fieldpath = strcat('/rxs/rx1/', field);
         field = h5read(filename, fieldpath)';
         time = linspace(0, (iterations - 1) * dt, iterations)';
@@ -114,25 +114,32 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
         axis off  
 
         % Options to create a nice looking figure for display and printing
-        set(fh1,'PaperUnits','inches');
+        
 
         %About PaperPosition
             % 1 inch = 150pixel
             %Paper Position is inch
         % 300x150 pixel   
-        set(fh1,'PaperPosition', [0 0 4 2])              
+        %set(fh1,'PaperUnits','inches');
+        %set(fh1,'PaperPosition', [0 0 4 2])     
 
+       
         %set image save path
-        image_save_path_tmp=strcat(absolute_path,'/Result_Images/')
-        splited_path=strsplit(merged_out_filename,'_')    
-        splited_path2=strcat(splited_path(1),'_')    
-        splited_path3=strcat(splited_path2,splited_path(2))  
-        combine_path1=strcat(image_save_path_tmp,splited_path3)
-        image_file_save_path=strcat(combine_path1,'.png')
-        final_image_path=string(image_file_save_path)
+        image_save_path_tmp=strcat(absolute_path,'/Result_Images/');
+        splited_path=strsplit(merged_out_filename,'_');
+        splited_path2=strcat(splited_path(1),'_');
+        splited_path3=strcat(splited_path2,splited_path(2));  
+        combine_path1=strcat(image_save_path_tmp,splited_path3);
+        %image_file_save_path=strcat(combine_path1,'.png');
+        %final_image_path=string(image_file_save_path);
 
         %save image
-        saveas(fh1,final_image_path);
+        %saveas(fh1,final_image_path);
+        
+        %save image removed white blank
+        %resolution 600*300
+        set(fh1,'Position',[0 0 775 368])        
+        export_fig([char(combine_path1),'.png'],'-png','-transparent')
 
         close all
 

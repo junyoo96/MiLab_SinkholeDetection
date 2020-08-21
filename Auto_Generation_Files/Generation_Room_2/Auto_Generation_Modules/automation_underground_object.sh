@@ -4,9 +4,10 @@
 StartTime=$(date +%s)
 
 #For DGX
-#ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
+ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
 #For DGX1
-ABSOLUTE_PATH=/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/Generation_Room_2
+#ABSOLUTE_PATH=/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/Generation_Room_2
+
 INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/Auto_Generation_Modules/InputFile_Auto_Generation_Modules/main.py
 INPUT_FILES_PATH=$ABSOLUTE_PATH/Input_Files
 MERGED_OUT_FILES_PATH=$ABSOLUTE_PATH/Merged_Out_Files

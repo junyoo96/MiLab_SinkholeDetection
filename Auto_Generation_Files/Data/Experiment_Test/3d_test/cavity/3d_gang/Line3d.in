@@ -1,0 +1,42 @@
+#title: C-scan of a cavity within a dielectric half-space
+#domain: 0.6 0.9 0.8
+#dx_dy_dz: 0.002 0.002 0.002
+#time_window: 15e-9
+
+#material: 10 0.01 1 0 soil
+
+#waveform: gaussiandotnorm 1 0.5e9 my_pulse
+
+#python:
+## Scans information
+## Total Ascans: 3*2 = 6
+## Job options: -n 6
+import numpy as np
+from gprMax.input_cmd_funcs import *
+
+N_bscans = 3
+N_ascans_per_bscan = 2
+ascan_space = 0.01
+bscan_space = 0.01
+
+xoffset = 0.1
+yoffset = 0.1
+tr_offset = 0.05
+it_bscan = np.floor((current_model_run - 1) / N_ascans_per_bscan)
+it_ascan = current_model_run - (it_bscan * N_ascans_per_bscan) - 1
+
+py = yoffset + (it_ascan * ascan_space)
+px = xoffset + (it_bscan * bscan_space)
+
+##copy
+hertzian_dipole=hertzian_dipole=('x',px,py-tr_offset/2, 0.5, 'my_pulse')
+rx=rx(px, py+tr_offset/2, 0.5)
+src_steps=src_steps(0,ascan_space,0)
+rx_steps=rx_steps(0, ascan_space, 0)
+
+#end_python:
+
+#box: 0 0 0 0.6 0.9 0.5 soil n
+#sphere: 0.3 0.45 0.2 0.1 free_space y
+
+#geometry_view: 0 0 0 0.6 0.9 0.8 0.002 0.002 0.002 Line01_ f

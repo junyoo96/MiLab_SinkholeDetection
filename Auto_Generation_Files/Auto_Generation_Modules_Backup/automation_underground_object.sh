@@ -4,9 +4,9 @@
 StartTime=$(date +%s)
 
 #For DGX
-#ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
+ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
 #For DGX1
-ABSOLUTE_PATH=/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
+#ABSOLUTE_PATH=/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
 INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/Auto_Generation_Modules/InputFile_Auto_Generation_Modules/main.py
 INPUT_FILES_PATH=$ABSOLUTE_PATH/Input_Files
 MERGED_OUT_FILES_PATH=$ABSOLUTE_PATH/Merged_Out_Files
@@ -29,18 +29,18 @@ trace_number=36
 
 for underground_object_index in $(seq 1 $numbers_to_generate);
 do
-    #generate inputfile
-    python $INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH $underground_object_type_to_generate $underground_object_index
+    # #generate inputfile
+    # python $INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH $underground_object_type_to_generate $underground_object_index
 
-    #run gprmax with inputfile    
-    for entry in $WORKTABLE_PATH/*.in;
-    do         
-        input_file_name=$entry
-        python -m gprMax $input_file_name -n $trace_number -gpu 0
-    done
+    # #run gprmax with inputfile    
+    # for entry in $WORKTABLE_PATH/*.in;
+    # do         
+    #     input_file_name=$entry
+    #     python -m gprMax $input_file_name -n $trace_number -gpu 0
+    # done
 
-    #make merged_out file ( remove other out files )
-    python -m tools.outputfiles_merge $WORKTABLE_PATH/${underground_object_type_to_generate}_${underground_object_index} --remove-files
+    # #make merged_out file ( remove other out files )
+    # python -m tools.outputfiles_merge $WORKTABLE_PATH/${underground_object_type_to_generate}_${underground_object_index} --remove-files
     
     #make image file (convert merged_out file to image file)  
     center_frequency_front_from_file=-1
@@ -66,28 +66,27 @@ do
 
     sudo /usr/local/MATLAB/R2020a/bin/matlab -nodisplay -nosplash -nodesktop -r "run('./MergedFile_To_Image_Auto_Converter_Modules/plot_Bscan_ed($input_center_frequency_front,$input_center_frequency_back)');exit;"    
  
+    # #move worktable files
+    # find $WORKTABLE_PATH/ -type f -not -name "${underground_object_type_to_generate}_${underground_object_index}_1.vti" -name "*.vti" -delete
+    # mv  $WORKTABLE_PATH/*.vti $INPUT_FILES_PATH
+    # mv  $WORKTABLE_PATH/*.in $INPUT_FILES_PATH
+    # mv  $WORKTABLE_PATH/*.out $MERGED_OUT_FILES_PATH
+    # find $WORKTABLE_PATH/ -type f -name "*.txt" -delete
 
-    #move worktable files
-    find $WORKTABLE_PATH/ -type f -not -name "${underground_object_type_to_generate}_${underground_object_index}_1.vti" -name "*.vti" -delete
-    mv  $WORKTABLE_PATH/*.vti $INPUT_FILES_PATH
-    mv  $WORKTABLE_PATH/*.in $INPUT_FILES_PATH
-    mv  $WORKTABLE_PATH/*.out $MERGED_OUT_FILES_PATH
-    find $WORKTABLE_PATH/ -type f -name "*.txt" -delete
-
-    #remove vti files(not used now)    
+    # remove vti files(not used now)    
     # find $WORKTABLE_PATH/ -type f -name "*.vti" -delete
     # find $WORKTABLE_PATH/ -type f -name "*.out" -delete
     # find $WORKTABLE_PATH/ -type f -name "*.in" -delete
 
 done
 
-#Measure execution time
-FinishTime=$(date +%s)
-ExecutionTime=$(($((FinishTime-StartTime))/60))
-echo "Generated underground object : $underground_object_type_to_generate\nGenerated number : $numbers_to_generate\nExecution Time : $ExecutionTime minutes"  > ../Worktable/execution_info.txt
-mv  $WORKTABLE_PATH/*.txt $LOG_FILES_PATH
+# #Measure execution time
+# FinishTime=$(date +%s)
+# ExecutionTime=$(($((FinishTime-StartTime))/60))
+# echo "Generated underground object : $underground_object_type_to_generate\nGenerated number : $numbers_to_generate\nExecution Time : $ExecutionTime minutes"  > ../Worktable/execution_info.txt
+# mv  $WORKTABLE_PATH/*.txt $LOG_FILES_PATH
 
-#copy main file
-cp -r InputFile_Auto_Generation_Modules/ ../Log_Files/
+# #copy main file
+# cp -r InputFile_Auto_Generation_Modules/ ../Log_Files/
 
     

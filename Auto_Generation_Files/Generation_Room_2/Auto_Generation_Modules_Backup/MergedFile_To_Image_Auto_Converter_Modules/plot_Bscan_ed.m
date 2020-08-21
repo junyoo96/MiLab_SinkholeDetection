@@ -114,13 +114,14 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
         axis off  
 
         % Options to create a nice looking figure for display and printing
-        set(fh1,'PaperUnits','inches');
+        
 
         %About PaperPosition
             % 1 inch = 150pixel
             %Paper Position is inch
         % 300x150 pixel   
-        set(fh1,'PaperPosition', [0 0 4 2])              
+        %set(fh1,'PaperUnits','inches');
+        %set(fh1,'PaperPosition', [0 0 4 2])              
 
         %set image save path
         image_save_path_tmp=strcat(absolute_path,'/Result_Images/')
@@ -128,11 +129,13 @@ function myFunctionReturn=plot_Bscan_ed(cen_frequency_front_in,cen_frequency_bac
         splited_path2=strcat(splited_path(1),'_')    
         splited_path3=strcat(splited_path2,splited_path(2))  
         combine_path1=strcat(image_save_path_tmp,splited_path3)
-        image_file_save_path=strcat(combine_path1,'.png')
-        final_image_path=string(image_file_save_path)
+        %image_file_save_path=strcat(combine_path1,'.png')
+        %final_image_path=string(image_file_save_path)
 
         %save image
-        saveas(fh1,final_image_path);
+        %saveas(fh1,final_image_path);
+        set(fh1,'Position',[0 0 775 368])        
+        export_fig([char(combine_path1),'.png'],'-png','-transparent')
 
         close all
 

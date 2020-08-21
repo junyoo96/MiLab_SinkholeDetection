@@ -4,9 +4,9 @@
 StartTime=$(date +%s)
 
 #For DGX
-#ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
+ABSOLUTE_PATH=/root/Desktop/workspace/youngjun/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
 #For DGX1
-ABSOLUTE_PATH=/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
+#ABSOLUTE_PATH=/workspace/youngjun/MiLab_Experiment/SinkholeDetection/MiLab_SinkholeDetection/Auto_Generation_Files/
 INPUT_FILE_AUTOMATION_MODULES_MAIN_PY_PATH=$ABSOLUTE_PATH/Auto_Generation_Modules/InputFile_Auto_Generation_Modules/main.py
 INPUT_FILES_PATH=$ABSOLUTE_PATH/Input_Files
 MERGED_OUT_FILES_PATH=$ABSOLUTE_PATH/Merged_Out_Files
@@ -25,7 +25,8 @@ underground_object_type_to_generate=$(echo "$underground_object_type_to_generate
 echo ${underground_object_type_to_generate}
 
 #gprmax b-scan trace number : 10 
-trace_number=36
+#trace_number=36
+trace_number=1
 
 for underground_object_index in $(seq 1 $numbers_to_generate);
 do
@@ -66,7 +67,6 @@ do
 
     sudo /usr/local/MATLAB/R2020a/bin/matlab -nodisplay -nosplash -nodesktop -r "run('./MergedFile_To_Image_Auto_Converter_Modules/plot_Bscan_ed($input_center_frequency_front,$input_center_frequency_back)');exit;"    
  
-
     # #move worktable files
     # find $WORKTABLE_PATH/ -type f -not -name "${underground_object_type_to_generate}_${underground_object_index}_1.vti" -name "*.vti" -delete
     # mv  $WORKTABLE_PATH/*.vti $INPUT_FILES_PATH
@@ -74,7 +74,7 @@ do
     # mv  $WORKTABLE_PATH/*.out $MERGED_OUT_FILES_PATH
     # find $WORKTABLE_PATH/ -type f -name "*.txt" -delete
 
-    #remove vti files(not used now)    
+    # remove vti files(not used now)    
     # find $WORKTABLE_PATH/ -type f -name "*.vti" -delete
     # find $WORKTABLE_PATH/ -type f -name "*.out" -delete
     # find $WORKTABLE_PATH/ -type f -name "*.in" -delete

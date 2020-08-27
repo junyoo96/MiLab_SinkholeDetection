@@ -6,4 +6,7 @@ class Title(Utility):
 
     def write_textfile(self,textfile):
         text = f"#title: {self.title}\n"
-        textfile.write(text)
+        textfile.append(text)
+
+        return textfile
+        

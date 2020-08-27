@@ -8,4 +8,8 @@ class Domain(Utility):
 
     def write_textfile(self, textfile):
         text =f"#domain: {self.x} {self.y} {self.z}\n"
-        textfile.write(text)
+        #textfile.write(text)
+        textfile.append(text)
+        
+        return textfile
+        

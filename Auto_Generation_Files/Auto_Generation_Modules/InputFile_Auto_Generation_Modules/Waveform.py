@@ -9,4 +9,7 @@ class Waveform(Utility):
 
     def write_textfile(self, textfile):
         text = f"#waveform: {self.type} {self.max_amplitude} {self.center_frequency}e9 {self.identifier}\n"
-        textfile.write(text)
+        #textfile.write(text)
+        textfile.append(text)
+
+        return textfile

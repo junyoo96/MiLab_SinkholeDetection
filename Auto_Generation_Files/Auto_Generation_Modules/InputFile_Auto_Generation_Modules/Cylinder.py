@@ -12,6 +12,9 @@ class Cylinder(Utility):
         self.material_identifier=material_identifier
         self.dielectric_smoothing_activation=dielectric_smoothing_activation
 
-    def write_textfile(self, textfile):
+    def write_textfile(self):
         text = f"#cylinder: {self.lower_x} {self.lower_y} {self.lower_z} {self.higher_x} {self.higher_y} {self.higher_z} {self.radius} {self.material_identifier} {self.dielectric_smoothing_activation}\n"
-        textfile.write(text)
+        
+        
+        #text is right! not textfile because of time
+        return text

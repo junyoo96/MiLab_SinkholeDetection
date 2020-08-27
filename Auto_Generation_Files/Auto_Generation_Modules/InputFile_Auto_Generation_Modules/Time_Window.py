@@ -6,4 +6,7 @@ class Time_Window(Utility):
 
     def write_textfile(self, textfile):
         text = f"#time_window: {self.time_window}\n"
-        textfile.write(text)
+        #textfile.write(text)
+        textfile.append(text)
+        
+        return textfile

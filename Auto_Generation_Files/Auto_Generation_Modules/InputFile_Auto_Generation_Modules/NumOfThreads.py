@@ -6,4 +6,7 @@ class NumOfThreads(Utility):
 
     def write_textfile(self,textfile):
         text = f"#num_threads: {self.numOfThreads}\n"
-        textfile.write(text)
+        #textfile.write(text)
+        textfile.append(text)
+
+        return textfile

@@ -11,4 +11,7 @@ class Sphere(Utility):
 
     def write_textfile(self,textfile):
         text=f"#sphere: {self.x} {self.y} {self.z} {self.radius} {self.material} {self.dielectric_smoothing_activation}\n"
-        textfile.write(text)
+        #textfile.write(text)
+        textfile=textfile+text
+
+        return textfile

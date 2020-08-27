@@ -15,4 +15,7 @@ class Geometry_View(Utility):
 
     def write_textfile(self, textfile):
         text = f"#geometry_view: {self.lower_left_x} {self.lower_left_y} {self.lower_left_z} {self.higher_right_x} {self.higher_right_y} {self.higher_right_z} {self.dx} {self.dy} {self.dz} {self.filename} n"
-        textfile.write(text)
+        #textfile.write(text)
+        textfile.append(text)
+
+        return textfile

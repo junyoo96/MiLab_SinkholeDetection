@@ -8,6 +8,10 @@ class Hertzian_Dipole(Utility):
         self.source_z=source_z
         self.source_identifier=source_identifier
 
-    def write_textfile(self, textfile):
-        text =f"#hertzian_dipole: {self.source_polarisation} {self.source_x} {self.source_y} {self.source_z} {self.source_identifier}\n"
-        textfile.write(text)
+    def write_textfile(self,source_x_list):
+        hertzian_dipole_list=[]
+        for i in range(len(source_x_list)):
+            text =f"#hertzian_dipole: {self.source_polarisation} {source_x_list[i]} {self.source_y} {self.source_z} {self.source_identifier}\n"
+            hertzian_dipole_list.append(text)
+        
+        return hertzian_dipole_list

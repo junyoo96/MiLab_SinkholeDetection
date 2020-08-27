@@ -10,4 +10,8 @@ class Material(Utility):
 
     def write_textfile(self, textfile):
         text = f"#material: {self.relative_permittivity} {self.conductivity} {self.relative_permeability} {self.magnetic_loss} {self.identifier}\n"
-        textfile.write(text)
+        #textfile.write(text)
+        textfile.append(text)
+        
+        return textfile
+        

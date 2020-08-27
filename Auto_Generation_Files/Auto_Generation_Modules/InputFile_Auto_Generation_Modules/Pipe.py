@@ -149,6 +149,7 @@ class Pipe(Utility):
                     )
 
         pipe_cylinder.write_textfile(textfile)
+        
 
         pipe_content_cylinder=None
         if self.water==True:
@@ -176,4 +177,6 @@ class Pipe(Utility):
                                         self.pipe_content_dielectric_smoothing_activation
                                         )
 
-        pipe_content_cylinder.write_textfile(textfile)
+        textfile=pipe_content_cylinder.write_textfile(textfile)
+
+        return textfile

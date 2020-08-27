@@ -8,4 +8,7 @@ class Rx_Steps(Utility):
 
     def write_textfile(self, textfile):
         text = f"#rx_steps: {self.x} {self.y} {self.z}\n"
-        textfile.write(text)
+        #textfile.write(text)
+        textfile.append(text)
+
+        return textfile

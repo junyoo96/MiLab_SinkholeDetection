@@ -22,6 +22,18 @@ import sys
 import os.path
 import math
 from math import gcd
+
+textfile=[]
+
+#for multi-b scan
+hertzian_dipole_content_list=[]
+rx_content_list=[]
+source_x_list=[]
+
+multi_b_scan_num=1
+multi_b_scan_cavity_x_offset=0.038
+is_multi_b_scan=False
+
 # Underground Object Generation File
 
 UNDERGROUND_OBJECT_TYPE = None
@@ -46,9 +58,6 @@ DOMAIN_Z_UNDERGROUND_START = 1
 # 안테나 띄울 공간 얼마나 확보할지
 DOMAIN_Z_FREESPACE_OFFSET = 0.1
 
-#jun-modify
-# DOMAIN_X = 0.2
-# DOMAIN_Y = 0.8
 DOMAIN_X = 0.15
 DOMAIN_Y = 0.9
 DOMAIN_Z = DOMAIN_Z_UNDERGROUND_START + DOMAIN_Z_FREESPACE_OFFSET  # 1m + 0.1m(지표면에서 안테나 살짝 띄울공간 확보)
@@ -158,7 +167,7 @@ WAVEFORM_TYPE = "ricker"
 WAVEFORM_MAX_AMPLITUDE_MIN = 1
 WAVEFORM_MAX_AMPLITUDE_MAX = 1
 
-#jun-modify
+
 WAVEFORM_CENTER_FREQUENCY_MIN = 0.3
 WAVEFORM_CENTER_FREQUENCY_MAX = 0.8
 
@@ -167,7 +176,7 @@ WAVEFORM_IDENTIFIER = "my_pulse"
 # ================================================================
 # hertzian_dipole
 # 지표면에서 안테나 얼마나 띄울지
-#jun modify
+
 ANTENNA_HEIGHT_OFFSET = 0.02  # 2cm
 # PML에 안테나가 붙어었으면 안되서 좀 떨어뜨리기 위한 offset
 ANTENNA_Y_OFFSET = 0.1
@@ -274,7 +283,7 @@ SPHERE_TOP_Z_MIN_WITH_HIGH_CENTER_FREQUENCY=0.5
 
 #need to modify like sphere top z
 SPHERE_Z_MIN = round(DOMAIN_Z_UNDERGROUND_START/2-SPHERE_MOVING_OFFSET_Z,3)
-#jun-modify
+
 SPHERE_Z_MAX = round(DOMAIN_Z_UNDERGROUND_START/2,3)
 
 # sphere radius(10cm~20cm)
@@ -288,7 +297,7 @@ SPHERE_MATERIAL = "free_space"
 SPHERE_DIELECTRIC_SMOOTHING_ACTIVATION = "y"
 
 #cavity water portion
-#jun-modify
+
 CAVITY_WATER_PORTION_MIN=0.01
 CAVITY_WATER_PORTION_MAX=0.30
 
@@ -319,32 +328,36 @@ GEOMETRY_VIEW_FILENAME = None
 ##Generation Code
 # ================================================================
 
-textfile = None
+
 utility=Utility()
 
 def generate_title():
     # title
+    global textfile
     title=Title(TITLE)
-    title.write_textfile(textfile)
+    textfile=title.write_textfile(textfile)
 
 def generate_domain(): ##여기서부터 이어서 시작
     # domain
+    global textfile
     domain = Domain(DOMAIN_X,DOMAIN_Y,DOMAIN_Z)
-    domain.write_textfile(textfile)
+    textfile=domain.write_textfile(textfile)
 
 def generate_dx_dz_dy():
     # dx_dy_dz
+    global textfile
     dx_dy_dz = Dx_Dy_Dz(DX_DY_DZ_X,DX_DY_DZ_Y,DX_DY_DZ_Z)
-    dx_dy_dz.write_textfile(textfile)
+    textfile=dx_dy_dz.write_textfile(textfile)
 
 def generate_time_window():
     # time_window
+    global textfile
     time_window = Time_Window(TIME_WINDOW)
-    time_window.write_textfile(textfile)
+    textfile=time_window.write_textfile(textfile)
 
 def generate_material_soil():
     # relative permittivity
-
+    global textfile
     material_soil=Material(
         utility.random_sampling(MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MIN,MATERIAL_SOIL_RELATIVE_PERMITTIVITY_MAX,2),
         utility.random_sampling(MATERIAL_SOIL_CONDUCTIVITY_MIN, MATERIAL_SOIL_CONDUCTIVITY_MAX),
@@ -353,10 +366,10 @@ def generate_material_soil():
         MATERIAL_SOIL_IDENTIFIER
     )
 
-    material_soil.write_textfile(textfile)
+    textfile=material_soil.write_textfile(textfile)
 
 def generate_material_asphalt():
-
+    global textfile
     material_asphalt = Material(
         utility.random_sampling(MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MIN,MATERIAL_ASPHALT_RELATIVE_PERMITTIVITY_MAX,2),
         utility.random_sampling(MATERIAL_ASPHALT_CONDUCTIVITY_MIN, MATERIAL_ASPHALT_CONDUCTIVITY_MAX),
@@ -365,9 +378,10 @@ def generate_material_asphalt():
         MATERIAL_ASPHALT_IDENTIFIER
     )
 
-    material_asphalt.write_textfile(textfile)
+    textfile=material_asphalt.write_textfile(textfile)
 
 def generate_material_water():
+    global textfile
     material_water = Material(
         utility.random_sampling(MATERIAL_WATER_RELATIVE_PERMITTIVITY_MIN,MATERIAL_WATER_RELATIVE_PERMITTIVITY_MAX),
         utility.random_sampling(MATERIAL_WATER_CONDUCTIVITY_MIN, MATERIAL_WATER_CONDUCTIVITY_MAX),
@@ -376,9 +390,10 @@ def generate_material_water():
         MATERIAL_WATER_IDENTIFIER
     )
 
-    material_water.write_textfile(textfile)
+    textfile=material_water.write_textfile(textfile)
 
 def generate_material_concrete():
+    global textfile
     material_concrete=Material(
         utility.random_sampling(MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MIN,MATERIAL_CONCRETE_RELATIVE_PERMITTIVITY_MAX),
         utility.random_sampling(MATERIAL_CONCRETE_CONDUCTIVITY_MIN,MATERIAL_CONCRETE_CONDUCTIVITY_MAX),
@@ -387,11 +402,11 @@ def generate_material_concrete():
         MATERIAL_CONCRETE_IDENTIFIER
     )
 
-    material_concrete.write_textfile(textfile)
+    textfile=material_concrete.write_textfile(textfile)
 
 
 def generate_waveform():
-
+    global textfile
     global DETERMINED_WAVERFORM_CENTER_FREQUENCY
     DETERMINED_WAVERFORM_CENTER_FREQUENCY=utility.random_sampling(WAVEFORM_CENTER_FREQUENCY_MIN, WAVEFORM_CENTER_FREQUENCY_MAX)
     
@@ -403,11 +418,11 @@ def generate_waveform():
         WAVEFORM_IDENTIFIER
     )
     
-
-    waveform.write_textfile(textfile)
+    textfile=waveform.write_textfile(textfile)
 
 def generate_hertzian_dipole():
-
+    global textfile
+    global hertzian_dipole_content_list
     hertzian_dipole=Hertzian_Dipole(
         HERTZIAN_DIPOLE_SOURCE_POLARISATION,
         HERTZIAN_DIPOLE_SOURCE_X,
@@ -416,40 +431,41 @@ def generate_hertzian_dipole():
         HERTZIAN_DIPOLE_SOURCE_IDENTIFIER
     )
 
-    hertzian_dipole.write_textfile(textfile)
+    hertzian_dipole_content_list=hertzian_dipole.write_textfile(source_x_list)
 
 def generate_rx():
-
+    global textfile
+    global rx_content_list
     rx=Rx(
         RX_X,
         RX_Y,
         RX_Z
     )
 
-    rx.write_textfile(textfile)
+    rx_content_list=rx.write_textfile(source_x_list)
 
 def generate_src_steps():
-
+    global textfile
     src_steps=SRC_Steps(
         SRC_STEPS_X,
         SRC_STEPS_Y,
         SRC_STEPS_Z
     )
 
-    src_steps.write_textfile(textfile)
+    textfile=src_steps.write_textfile(textfile)
 
 def generate_rx_steps():
-
+    global textfile
     rx_steps=Rx_Steps(
        RX_STEPS_X,
        RX_STEPS_Y,
        RX_STEPS_Z
     )
 
-    rx_steps.write_textfile(textfile)
+    textfile=rx_steps.write_textfile(textfile)
 
 def generate_soil_box():
-
+    global textfile
     soil_box=Box(
         BOX_LOWER_LEFT_X,
         BOX_LOWER_LEFT_Y,
@@ -461,26 +477,26 @@ def generate_soil_box():
         BOX_DIELECTRIC_SMOOTHING_ACTIVATION
     )
 
-    soil_box.write_textfile(textfile)
+    textfile=soil_box.write_textfile(textfile)
 
 def generate_asphalt_box():
+    global textfile
+    asphalt_box=Box(
+        ASPHALT_BOX_LOWER_LEFT_X,
+        ASPHALT_BOX_LOWER_LEFT_Y,
+        ASPHALT_BOX_LOWER_LEFT_Z,
+        ASPHALT_BOX_HIGHER_RIGHT_X,
+        ASPHALT_BOX_HIGHER_RIGHT_Y,
+        ASPHALT_BOX_HIGHER_RIGHT_Z,
+        ASPHALT_BOX_MATERIAL_IDENTIFIER,
+        ASPHALT_BOX_DIELECTRIC_SMOOTHING_ACTIVATION
+    )
 
-   asphalt_box=Box(
-       ASPHALT_BOX_LOWER_LEFT_X,
-       ASPHALT_BOX_LOWER_LEFT_Y,
-       ASPHALT_BOX_LOWER_LEFT_Z,
-       ASPHALT_BOX_HIGHER_RIGHT_X,
-       ASPHALT_BOX_HIGHER_RIGHT_Y,
-       ASPHALT_BOX_HIGHER_RIGHT_Z,
-       ASPHALT_BOX_MATERIAL_IDENTIFIER,
-       ASPHALT_BOX_DIELECTRIC_SMOOTHING_ACTIVATION
-   )
-
-   asphalt_box.write_textfile(textfile)
+    textfile=asphalt_box.write_textfile(textfile)
 
 #generate cavity by shape of sphere
 def generate_cavity_sphere(water=False):
-
+    global textfile
     if water == False:
         sphere_material = MATERIAL_FREESPACE_IDENTIFIER
     else:
@@ -502,11 +518,11 @@ def generate_cavity_sphere(water=False):
         sphere_dielectric_smoothing_activation
     )
 
-    cavity_sphere.write_textfile(textfile)
+    textfile=cavity_sphere.write_textfile(textfile)
 
 #generate cavity by shape of cylinder
 def generate_cavity_cylinder(water=False, water_portion=0):
-
+    global textfile
     MINIMUM_CAVITY_CYLINDER_END_RADIUS=0.02
 
     cavity_lower_x_determined=utility.random_sampling(SPHERE_X_MIN, SPHERE_X_MAX)
@@ -573,7 +589,7 @@ def generate_cavity_cylinder(water=False, water_portion=0):
         )
 
         if round(current_cylinder_lower_z,3)>0:
-            cavity_cylinder.write_textfile(textfile)
+            textfile.append(cavity_cylinder.write_textfile())
 
         current_cylinder_lower_z+=height_per_cylinder
 
@@ -595,6 +611,7 @@ def generate_cavity_cylinder(water=False, water_portion=0):
         
 
 def generate_pipe(water=False):
+    global textfile
     pipe=None
     if water==True:
         pipe = Pipe(pipe_material=MATERIAL_CONCRETE_IDENTIFIER,
@@ -612,15 +629,15 @@ def generate_pipe(water=False):
                     pipe_content_dielectric_smoothing_activation=MATERIAL_FREESPACE_DIELECTRIC_SMOOTHING_ACTIVATION
                     )
 
-
-    pipe.generate_pipe_with_cylinder(DOMAIN_X,
+    
+    textfile=pipe.generate_pipe_with_cylinder(DOMAIN_X,
                                  DOMAIN_Y,
                                  DOMAIN_Z,
                                  ANTENNA_Y_OFFSET,
                                  textfile
                                  )
 
-    textfile.write("\n")
+    textfile+="\n"
 
 def generate_manhole(water):
     manhole=Manhole(manhole_cover_material=MATERIAL_PEC_IDENTIFIER,
@@ -631,16 +648,17 @@ def generate_manhole(water):
                     free_space_dielectric_smoothing_activation=MATERIAL_FREESPACE_DIELECTRIC_SMOOTHING_ACTIVATION,
                     water=water
     )
-
+    global textfile
     manhole.generate_manhole(DOMAIN_X,
                              DOMAIN_Y,
                              DOMAIN_Z_UNDERGROUND_START,
                              ANTENNA_Y_OFFSET,
                              textfile)
 
-    textfile.write("\n")
+    textfile+="\n"
 
 def generate_geometry_view(iteration_index):
+    global textfile
     GEOMETRY_VIEW_FILENAME = "%s_%d_" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
 
     geometry_view=Geometry_View(
@@ -656,32 +674,53 @@ def generate_geometry_view(iteration_index):
         GEOMETRY_VIEW_FILENAME
     )
 
-    geometry_view.write_textfile(textfile)
+    textfile=geometry_view.write_textfile(textfile)
 
 
 def generate_model_environment_setting():
+    global textfile
     generate_title()
     generate_domain()
     generate_dx_dz_dy()
     generate_time_window()
     generate_numberOfPhysicalCore_setting()
 
-    textfile.write("\n")
+    #textfile.write("\n")
+    textfile.append('\n')
 
 def generate_waveform_setting():
+    global textfile
+    calculate_source_x_position()
+
     generate_waveform()
     generate_hertzian_dipole()
     generate_rx()
     generate_src_steps()
     generate_rx_steps()
 
-    textfile.write("\n")
+    
+    textfile.append('\n')
 
 def generate_numberOfPhysicalCore_setting():
+    global textfile
     numOfThreads=NumOfThreads(NUM_OF_PHYSICAL_THREADS)
-    numOfThreads.write_textfile(textfile)
+    textfile=numOfThreads.write_textfile(textfile)
 
 
+def calculate_source_x_position():
+    source_x_position_low=multi_b_scan_cavity_x_offset
+    source_x_position_top=DOMAIN_X-multi_b_scan_cavity_x_offset
+    source_x_position_center=DOMAIN_X/2
+
+    if is_multi_b_scan==True:
+        source_x_list.append(round(source_x_position_low,4))
+        source_x_list.append(round(source_x_position_center,4))
+        source_x_list.append(round(source_x_position_top,4))
+
+    else:
+        source_x_list.append(source_x_position_center)
+
+    
 # ================================================================
 # def check_parameter_range():
 #     print("Check Parameters...")
@@ -774,97 +813,95 @@ def generate_numberOfPhysicalCore_setting():
 
 def cavity_generation(iteration_index, water=False):
     print("Starting Cavity_Input_File_Generation...")
-
+    global textfile
     ##write parameters on file
     generate_model_environment_setting()
-
+    
     generate_material_soil()
     generate_material_asphalt()
     if water == True:
         generate_material_water()
-    textfile.write("\n")
+    
+    textfile.append('\n')
 
     generate_waveform_setting()
 
     generate_asphalt_box()
     generate_soil_box()
     
-    
     generate_cavity_cylinder(water,water_portion=utility.random_sampling(CAVITY_WATER_PORTION_MIN,CAVITY_WATER_PORTION_MAX))
     
-    textfile.write("\n")
+    textfile.append('\n')
 
     generate_geometry_view(iteration_index)
-
-    textfile.close()
 # ================================================================
 def pipe_generation(iteration_index,water=False):
     print("Starting Pipe_Input_File_Generation...")
 
-    ##write parameters on file
-    generate_model_environment_setting()
+    # ##write parameters on file
+    # generate_model_environment_setting()
 
-    generate_material_soil()
-    generate_material_asphalt()
-    if water == True:
-        generate_material_water()
-    generate_material_concrete()
-    textfile.write("\n")
+    # generate_material_soil()
+    # generate_material_asphalt()
+    # if water == True:
+    #     generate_material_water()
+    # generate_material_concrete()
+    
 
-    generate_waveform_setting()
+    # generate_waveform_setting()
 
-    generate_asphalt_box()
-    generate_soil_box()
+    # generate_asphalt_box()
+    # generate_soil_box()
 
-    generate_pipe(water)
+    # generate_pipe(water)
 
-    generate_geometry_view(iteration_index)
+    # generate_geometry_view(iteration_index)
 
-    textfile.close()
+    #textfile.close()
 # ================================================================
 def manhole_generation(iteration_index,water=False):
     print("Starting Manhole_Input_File_Generation...")
 
-    ##write parameters on file
-    generate_model_environment_setting()
+    # ##write parameters on file
+    # generate_model_environment_setting()
 
-    generate_material_soil()
-    generate_material_asphalt()
-    if water == True:
-        generate_material_water()
-    textfile.write("\n")
+    # generate_material_soil()
+    # generate_material_asphalt()
+    # if water == True:
+    #     generate_material_water()
+    # #textfile.write("\n")
 
-    generate_waveform_setting()
+    # generate_waveform_setting()
 
-    generate_asphalt_box()
-    generate_soil_box()
+    # generate_asphalt_box()
+    # generate_soil_box()
 
-    generate_manhole(water)
+    # generate_manhole(water)
 
-    generate_geometry_view(iteration_index)
+    # generate_geometry_view(iteration_index)
 
-    textfile.close()
+    #textfile.close()
 # ================================================================
 
 def subsoil_generation(iteration_index):
     print("Starting Subsoil_Input_File_Generation...")
 
-    ##write parameters on file
-    generate_model_environment_setting()
+    # ##write parameters on file
+    # generate_model_environment_setting()
 
-    generate_material_soil()
-    generate_material_asphalt()
-    textfile.write("\n")
+    # generate_material_soil()
+    # generate_material_asphalt()
+    # #textfile.write("\n")
 
-    generate_waveform_setting()
+    # generate_waveform_setting()
 
-    generate_asphalt_box()
-    generate_soil_box()
-    textfile.write("\n")
+    # generate_asphalt_box()
+    # generate_soil_box()
+    # #textfile.write("\n")
 
-    generate_geometry_view(iteration_index)
+    # generate_geometry_view(iteration_index)
 
-    textfile.close()
+    # #textfile.close()
 
 def generate_waveform_info_file():
 
@@ -877,22 +914,56 @@ def generate_waveform_info_file():
 
 # ================================================================
 
-def auto_generation(underground_object_type,iteration_index):
+def b_scan_auto_generation(underground_object_type,iteration_index):
 
-    print("==================InputFile_Auto_Generation Start!======================")
+    print("==================B-scan InputFile_Auto_Generation Start!======================")
 
+    # global UNDERGROUND_OBJECT_TYPE
+    # UNDERGROUND_OBJECT_TYPE=underground_object_type
+    # global TITLE
+    # TITLE= "B-scan of a %s" % UNDERGROUND_OBJECT_TYPE
+
+    # print(os.path.realpath(__file__))
+    # # generate file
+    # filepath = os.path.dirname(__file__)+"/../../Worktable/%s_%d.in" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
+    # global textfile
+    # textfile = open(filepath, 'w')
+
+    # #check_parameter_range()
+
+    # if underground_object_type=="cavity":
+    #     cavity_generation(iteration_index,water=False)
+    #     # cavity_generation(iteration_index,water=True)
+    # elif underground_object_type=="manhole":
+    #     manhole_generation(iteration_index,water=True)
+    # elif underground_object_type=="pothole":
+    #     print("pothole")
+    # elif underground_object_type=="pipe":
+    #     pipe_generation(iteration_index,water=True)
+    # elif underground_object_type=="subsoil":
+    #     subsoil_generation(iteration_index)
+    # else:
+    #     print("wrong underground_object_type")
+    #     sys.exit()
+    
+    # #generate waveform info file for image processing
+    # generate_waveform_info_file()
+
+    # print("Generation Done")
+
+def mutliple_b_scan_auto_generation(underground_object_type,iteration_index, b_scan_iteration):
+
+    print("==================Mutiple B-scan InputFile_Auto_Generation Start!======================")
+    global is_multi_b_scan
     global UNDERGROUND_OBJECT_TYPE
-    UNDERGROUND_OBJECT_TYPE=underground_object_type
     global TITLE
+
+    is_multi_b_scan=True    
+    UNDERGROUND_OBJECT_TYPE=underground_object_type    
     TITLE= "B-scan of a %s" % UNDERGROUND_OBJECT_TYPE
-
-    print(os.path.realpath(__file__))
-    # generate file
-    filepath = os.path.dirname(__file__)+"/../../Worktable/%s_%d.in" % (UNDERGROUND_OBJECT_TYPE, iteration_index)
-    global textfile
-    textfile = open(filepath, 'w')
-
+ 
     #check_parameter_range()
+    multi_b_scan_num=b_scan_iteration
 
     if underground_object_type=="cavity":
         cavity_generation(iteration_index,water=False)
@@ -908,14 +979,37 @@ def auto_generation(underground_object_type,iteration_index):
     else:
         print("wrong underground_object_type")
         sys.exit()
+
+    # generate file
+    global textfile
     
-    #generate waveform info file for image processing
-    generate_waveform_info_file()
+    for i in range(b_scan_iteration):
+        textfile_content=''
+
+        for text in textfile:
+            if '#src_steps' in text:                
+                # print('1',hertzian_dipole_content_list)
+                # print('2',rx_content_list)
+                textfile_content+=hertzian_dipole_content_list[i]
+                textfile_content+=rx_content_list[i]
+            textfile_content+=text
+
+        file_index=i+1
+        filepath = os.path.dirname(__file__)+"/../../Worktable/%s_%d_%d.in" % (UNDERGROUND_OBJECT_TYPE, iteration_index,file_index)
+        real_textfile=open(filepath,'w')
+        real_textfile.write(textfile_content)
+        real_textfile.close()
 
     print("Generation Done")
 
 if __name__ == '__main__':
-    auto_generation(sys.argv[1], int(sys.argv[2]))
+    #for b_scan
+    #b_scan_auto_generation(sys.argv[1], int(sys.argv[2]))    
+    
+    #for multiple_b_scan
+    mutliple_b_scan_auto_generation(sys.argv[1], int(sys.argv[2]),int(sys.argv[3]))    
+
+
     sys.exit()
 
 
